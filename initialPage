@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+    <head>
+	<script src="http://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+	
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+	
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+		<style>
+			.cardsContainer {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-wrap: wrap;
+}
+
+.cardArea {
+  display: flex;
+  float: left;
+}
+
+.material-card {
+  display: flex;
+  border: 2px solid black;
+  margin: 10px 10px 10px 10px;
+  width: 400px;
+  height: 399px;
+  justify-content: center;
+  background-color: gray;
+  overflow: scroll;
+  position: relative;
+  perspective: 1000px;
+}
+
+.front, .back {
+	backface-visibility: hidden;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	transition: transform 1s;
+}
+
+
+.front1, .back1 {
+	backface-visibility: hidden;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	transition: transform 1s;
+}
+
+.front1 {
+background-color: skyblue;
+  z-index: 2;
+  border: 2px solid black;
+  visibility: hidden;
+}
+
+.back1 {
+background-color: lightgreen;
+  transform: rotateY(180deg);
+  border: 2px solid black;
+  visibility: hidden;
+}
+
+.front {
+background-color: skyblue;
+  z-index: 2;
+}
+
+.back {
+background-color: lightgreen;
+  transform: rotateY(180deg);
+}
+
+/*#material-card_2 {
+	width: 400px;
+}
+
+#material-card_5 {
+	width: 100px;
+}
+
+#material-card_7 {
+	width: 250px;
+}*/
+.select2
+{
+ width: 300px;
+ float: right;
+ clear: right;
+}
+.bottomZone {
+  display: flex;
+  width: 100%;
+  height: 100px;
+  background: darkgray;
+}
+
+.newTaskContainer {
+	width: 100%;
+}
+
+.titleBarNewTask {
+	width: 100%;
+	background: lightgray;
+}
+
+.hideShowBarNewTask {
+	float: right;
+}
+
+.barNewTaskInsides {
+	display: none;
+	margin-top: 10px;
+}
+
+.barNewTaskInsidesTitle {
+	width: 50%;
+}
+
+.barNewTaskInsidesTask {
+	width: 100%;
+}
+
+		</style>
+	</head>
+    <body>
+<div class="newTaskContainer">
+  <div class="titleBarNewTask">
+  New Task<input type='button' class='hideShowBarNewTask' value='+'/>
+  </div>
+  <div class='barNewTaskInsides'> 
+  <input type='text' class='barNewTaskInsidesTitle' name='Title' value='Title'/>
+  <select class = 'select2' name='cards' multiple='multiple'></select>
+  <input type='text' class='barNewTaskInsidesTask' name='Task' value='Task'/>
+  <input type='button' class='addNewTaskButton' value='Add'/>
+  </div>
+  </div>
+<div class='cardsContainer' id='cardsContainer_0'>
+  <!--<div class='cardArea' id='cardArea_1'>
+      <div class='material-card' id='material-card_1'>
+	  <div class='front'>
+	  1
+	  </div>
+	  <div class='back'>
+	  1 back
+	  <input type='button' value='More' id='testMoreButton'/>
+	  <div class='inner-material-card'><div class='front'><input type='button' value='More' id='testEvenMoreButton'/><input type='button' value='Close' class='closeInnerCard1'>1card another front</div>
+	  <div class='back'>
+	  <input type='button' value='Back' id='testBackButton'/><input type='button' value='Close' class='closeInnerCard2'>1card another back
+	  <div class='inner-material-card'><div class='front'>1card one more front</div><div class='back'>1card one more back</div></div>
+	  </div></div>
+	  </div>
+	  </div>
+  </div>
+  <div class='cardArea' id='cardArea_2'>
+      <div class='material-card' id='material-card_2'>
+	  <div class='front'>
+	  2
+	  </div>
+	  <div class='back'>2 back 
+	  </div>
+	  </div>
+  </div>
+  <div class='cardArea' id='cardArea_3'>
+      <div class='material-card' id='material-card_3'>
+	  <div class='front'>
+	  <div>3</div>
+	  </div>
+	  <div class='back'>3 back
+	  <div class='inner-material-card'><div class='front'>3card one more front</div><div class='back'>3card one more back</div></div>
+	  </div>
+	  </div>
+  </div>
+  <div class='cardArea' id='cardArea_4'>
+      <div class='material-card' id='material-card_4'>
+	  <div class='front'>
+	  4
+	  </div>
+	  <div class='back'>4 back
+	  <div class='inner-material-card'><div class='front'>4card one more front</div><div class='back'>4card one more back</div></div>
+	  </div>
+	  </div>
+	  </div>
+  
+  <div class='cardArea' id='cardArea_5'>
+      <div class='material-card' id='material-card_5'>
+	  <div class='front'>
+	  5
+	  </div>
+	  <div class='back'>5 back
+	  <div class='inner-material-card'><div class='front'>5card one more front</div><div class='back'>5card one more back</div></div>
+	  </div>
+	  </div>
+	  </div>
+  <div class='cardArea' id='cardArea_6'>
+      <div class='material-card' id='material-card_6'>
+	  <div class='front'>
+	  6
+	  </div>
+	  <div class='back'>6 back
+	  <div class='inner-material-card'><div class='front'>6card one more front</div><div class='back'>6card one more back</div></div>
+	  </div>
+	  </div>
+	  </div>
+  <div class='cardArea' id='cardArea_7'>
+      <div class='material-card' id='material-card_7'>
+	  <div class='front'>
+	  <div>7</div>
+	  </div>
+	  <div class='back'>7 back
+	  <div class='inner-material-card'><div class='front'>7card one more front</div><div class='back'>7card one more back</div></div>
+	  </div>
+	  </div>
+	</div>
+	<div class='cardArea' id='cardArea_8'>
+      <div class='material-card' id='material-card_8'>
+	  <div class='front'>
+	  <div>8</div>
+	  </div>
+	  <div class='back'>8 back
+	  <div class='inner-material-card'><div class='front'>8card one more front</div><div class='back'>8card one more back</div></div>
+	  </div>
+	  </div>
+	</div>
+	<div class='cardArea' id='cardArea_9'>
+      <div class='material-card' id='material-card_9'>
+	  <div class='front'>
+	  <div>9</div>
+	  </div>
+	  <div class='back'>9 back
+	  <div class='inner-material-card'><div class='front'>10card front</div><div class='back'>10card back</div></div>
+	  </div>
+	  </div>
+	</div>-->
+  <div style='clear: both' class='cardsContainerStretch'></div>
+ 
+  </div>
+
+<br>
+<script src="cardsLib.js"></script>
+<script>
+	var hideShowBarNewTaskClassName = 'hideShowBarNewTask';
+	var barNewTaskInsidesClassName = 'barNewTaskInsides';
+	var addNewTaskButtonClassName = 'addNewTaskButton';
+	var barNewTaskInsidesTitleClassName = 'barNewTaskInsidesTitle';
+	var barNewTaskInsidesTaskClassName = 'barNewTaskInsidesTask';
+	var selectSubtasksClassName = 'select2-subtasks';
+	
+	var cardsContainerClassName = 'cardsContainer';
+	var cardsClassName = 'material-card';
+	var innerCardsClassName = 'inner-material-card';
+	var cardAreasClassName = 'cardArea';
+	var cardFrontClassName = 'front';
+	var cardBackClassName = 'back';
+	var draggableAreaOnCardClassName = 'draggableAreaOnCard';
+	var flippableAreaOnCardClassName = 'flippableAreaOnCard';
+	var closeableAreaOnCardClassName = 'closeableAreaOnCard';
+	var checkableAreaOnCardClassName = 'checkableAreaOnCard';
+	var cardFrontClassName = 'front';
+	var cardBackClassName = 'back';
+	
+setInitialCardOrders();
+configureCardAreasWidth();
+window.addEventListener('resize', configureCardAreasWidth);
+window.addEventListener('DOMContentLoaded', onLoadHandler);
+$(document).ready(initializeSelectDropdownForCards);
+initializeOptionsForCardsDropdown();
+makeCardsCheckable(cards);
+makeCardsDraggable(cards);
+makeCardsFlippable(cards);
+makeCardsFlippable(innerCards);
+makeCardsCloseable(cards);
+$(cardsContainer).on('DOMNodeInserted', handleNewCardAppearance);
+	
+	initial();
+
+	function initial() {
+		$(document).ready(makeHideShowButtonReactOnClick);
+		$(document).ready(makeAddButtonAddNewTask);
+		var cardsContainer = document.getElementsByClassName(cardsContainerClassName)[0];
+		cardsContainer.addEventListener('DOMNodeInserted', configureCardsBackForSubtasks);
+		initializePlaceholderForSubtasksSelect();
+	}
+	
+	function makeHideShowButtonReactOnClick() {
+	var btnHideShowTaskBar = document.getElementsByClassName(hideShowBarNewTaskClassName)[0];
+	btnHideShowTaskBar.addEventListener('click', btnHideShowTaskBarClickHandler);
+	}
+	
+	function btnHideShowTaskBarClickHandler(e) {
+		var contentToShowOnClick = document.getElementsByClassName(barNewTaskInsidesClassName)[0];
+		if (!contentToShowOnClick.style.display || contentToShowOnClick.style.display == 'none') {
+			contentToShowOnClick.style.display = 'flex';
+			e.target.value = '-';
+		}
+		else {
+			contentToShowOnClick.style.display = 'none';
+			e.target.value = '+';
+		}
+	}
+	
+	function makeAddButtonAddNewTask() {
+		var addButton = document.getElementsByClassName(addNewTaskButtonClassName)[0];
+		addButton.addEventListener('click', createNewTask);
+	}
+
+	function createNewTask(e) {
+		var cardsContainer = document.getElementsByClassName(cardsContainerClassName)[0];
+	
+		var numberOfCardAreas = document.getElementsByClassName('cardArea').length + 1;
+		var newCardArea = document.createElement('div');
+		newCardArea.className = 'cardArea';
+		newCardArea.id = 'cardArea_' + numberOfCardAreas;
+		newCardArea.style.display = 'flex';
+		
+		var newCard = document.createElement('div');
+		newCard.className = 'material-card';
+		newCard.id = 'material-card_' + numberOfCardAreas;
+		newCard.style.display = 'flex';
+		
+		var newCardFront = document.createElement('div');
+		newCardFront.className = 'front';
+		var barNewTaskInsidesTitle = document.getElementsByClassName(barNewTaskInsidesTitleClassName)[0];
+		var barNewTaskInsidesTask = document.getElementsByClassName(barNewTaskInsidesTaskClassName)[0];
+		newCardFront.innerHTML = '<h1>' + barNewTaskInsidesTitle.value + '</h1><p/>' + barNewTaskInsidesTask.value;
+		
+		var newCardBack = document.createElement('div');
+		newCardBack.className = 'back';
+	
+		newCard.appendChild(newCardFront);
+		newCard.appendChild(newCardBack);
+		newCardArea.appendChild(newCard);
+		cardsContainer.insertBefore(newCardArea, cardsContainer.childNodes[cardsContainer.childNodes.length - 2]);
+	}
+	
+	function configureCardsBackForSubtasks(e) {
+	if (e.target.className && e.target.className.indexOf(closeableAreaOnCardClassName) != -1 && e.target.parentNode.className.indexOf(cardBackClassName) != -1 && e.target.className.indexOf(selectSubtasksClassName) == -1) {
+			var allCardsOnPage = document.getElementsByClassName(cardsClassName);
+		for (var i = allCardsOnPage.length - 1; i < allCardsOnPage.length; i++) {
+			var front = allCardsOnPage[i].getElementsByClassName(cardFrontClassName)[0];
+			var back = allCardsOnPage[i].getElementsByClassName(cardBackClassName)[0];
+			var frontDrag = front.getElementsByClassName(draggableAreaOnCardClassName)[0];
+			var frontFlip = front.getElementsByClassName(flippableAreaOnCardClassName)[0];
+			var backDrag = back.getElementsByClassName(draggableAreaOnCardClassName)[0];
+			var backFlip = back.getElementsByClassName(flippableAreaOnCardClassName)[0];
+			
+			frontDrag.innerHTML = 'Drag';
+			backDrag.innerHTML = 'Drag';
+			frontFlip.innerHTML = 'Subtasks';
+			backFlip.innerHTML = 'Back';
+			
+			var chooseSubtaskSelect = document.createElement('select');
+		chooseSubtaskSelect.className = 'select2 ' + selectSubtasksClassName;
+		chooseSubtaskSelect.name = 'subtasks';
+		chooseSubtaskSelect.style.width = '100%';
+		back.appendChild(chooseSubtaskSelect);
+		
+		var labelAddNewSubtask = document.createElement('label');
+		labelAddNewSubtask.innerHTML = 'Add new subtask: ';
+		labelAddNewSubtask.style.width = '100%';
+		back.appendChild(labelAddNewSubtask);
+		
+		var titleOfNewSubtask = document.createElement('input');
+		titleOfNewSubtask.type = 'text';
+		titleOfNewSubtask.value = 'Title';
+		titleOfNewSubtask.style.width = '100%';
+		titleOfNewSubtask.style.background = 'paleGreen';
+		back.appendChild(titleOfNewSubtask);
+		
+		var taskOfNewSubtask = document.createElement('input');
+		taskOfNewSubtask.type = 'text';
+		taskOfNewSubtask.value = 'Task';
+		taskOfNewSubtask.style.width = '100%';
+		taskOfNewSubtask.style.height = '50%';
+		taskOfNewSubtask.style.background = 'paleGreen';
+		back.appendChild(taskOfNewSubtask);
+		
+		var addButtonForNewSubtask = document.createElement('input');
+		addButtonForNewSubtask.type = 'button';
+		addButtonForNewSubtask.value = 'Add';
+		addButtonForNewSubtask.style.width = '100%';
+		addButtonForNewSubtask.style.height = '50px';
+		back.appendChild(addButtonForNewSubtask);
+		}
+	}
+}
+
+function initializePlaceholderForSubtasksSelect() {
+	$('.select2-subtasks').select2({
+		placeholder: "Select subtask",
+		allowClear: true
+	});
+}
+</script>
+    </body>
+</html>
