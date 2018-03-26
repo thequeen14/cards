@@ -1,6 +1,6 @@
 var cardsContainerClassName = 'cardsContainer';
 var cardsClassName = 'material-card';
-var innerCardsClassName = 'inner-material-card';
+var innerCardsClassName = 'inner-card';
 var cardAreasClassName = 'cardArea';
 var cardFrontClassName = 'front';
 var cardBackClassName = 'back';
@@ -32,6 +32,42 @@ var closedCards = [];
 var checkedCards = [];
 
 //initialFunction();
+
+function createNewMaterialCard(parentElement, typeOfCardClassName) {
+		var resultToAppendToParent;
+		var newCard = document.createElement('div');
+		
+		if (typeOfCardClassName.indexOf(cardsClassName) != -1) {
+		var numberOfCardAreas = document.getElementsByClassName(cardAreasClassName).length + 1;
+		var newCardArea = document.createElement('div');
+		newCardArea.className = 'cardArea';
+		newCardArea.id = 'cardArea_' + numberOfCardAreas;
+		newCardArea.style.display = 'flex';
+		
+		newCard.id = 'material-card_' + numberOfCardAreas;
+		newCard.className = cardsClassName;
+		newCard.style.display = 'flex';
+		}	
+		
+		var newCardFront = document.createElement('div');
+		newCardFront.className = 'front';
+		
+		var newCardBack = document.createElement('div');
+		newCardBack.className = 'back';
+	
+		newCard.appendChild(newCardFront);
+		newCard.appendChild(newCardBack);
+		if (parentElement.className.indexOf(cardsContainerClassName) != -1) {
+			newCardArea.appendChild(newCard);
+			resultToAppendToParent = newCardArea;
+		}
+		else {
+			newCard.className = innerCardsClassName;
+			newCard.style.display = 'none';
+			resultToAppendToParent = newCard;
+		}
+		return resultToAppendToParent;
+}
 
 function initialFunction() {
 
@@ -68,15 +104,15 @@ makeCardsCloseable(innerCards);
 makeAllCardsHidden();
 //raiseCardsBeforeAppearance(innerCards);
 
-makeCardsAppearWhenSelected(cardsDropdownClassName);
+makeCardsAppearWhenSelected(cardsDropdown);
 
-makeCardsDisappearWhenUnselected(cardsDropdownClassName);
+makeCardsDisappearWhenUnselected(cardsDropdown);
 
 //flipToDeeperLevel();
 
 //createFlipToDeeperLevelButton();
 
-$(cardsContainer).on('DOMNodeInserted', handleNewCardAppearance);
+//$(cardsContainer).on('DOMNodeInserted', handleNewCardAppearance);
 }
 
 function handleNewCardAppearance(e) {
@@ -91,7 +127,9 @@ function configureNewCard(card) {
 	var cardToArray = [];
 	cardToArray.push(card);
 	makeCardsCheckable(cardToArray);
-	makeCardsDraggable(cardToArray);
+	if (card.className.indexOf(cardsClassName) != -1) {
+		makeCardsDraggable(cardToArray);
+	}
 	makeCardsFlippable(cardToArray);
 	makeCardsCloseable(cardToArray);
 	cards = document.getElementsByClassName(cardsClassName);
@@ -131,7 +169,7 @@ function makeObjectFlipTheCardOnClick(object) {
 }
 
 function showMoreInfoAboutObject() {
-	var diveDeeperButton = document.getElementById('testMoreButton');
+	var diveDeeperButton = document.getElementByClassName('testMoreButton');
 	$(diveDeeperButton).click();
 }
 
@@ -154,12 +192,22 @@ function closeInnerCard(e) {
 	e.stopPropagation();
 	var target = e.target;
 	
-	var oneSideToClose = target.parentNode;
+	var dataOfCurrentChoice = e.params.args.data;
+	var cardCorrespondingChoiceNumber = parseInt(dataOfCurrentChoice.id);
+	var card = e.target.parentNode.parentNode.childNodes[cardCorrespondingChoiceNumber];
+	
+	/*var oneSideToClose = target.parentNode;
 	var anotherSideToClose = oneSideToClose.nextSibling;
 	if (e.target.className.indexOf('closeInnerCard2') != -1) {
 		anotherSideToClose = oneSideToClose.previousSibling;
+	}*/
+	
+	if (card.className.inexOf(innerCardsClassName) != -1) {
+		card.style.display = 'none';
+		raiseInnerCardsBeforeAppearance(card);
 	}
-	raiseInnerCardsBeforeAppearance(oneSideToClose.parentNode);
+	
+	//raiseInnerCardsBeforeAppearance(oneSideToClose.parentNode);
 	//oneSideToClose.style.visibility = 'hidden';
 	//anotherSideToClose.style.visibility = 'hidden';
 }
@@ -174,12 +222,17 @@ function raiseInnerCardsBeforeAppearance(card) {
 	var oneSide = card.getElementsByClassName(cardFrontClassName)[0];
 	var anotherSide = card.getElementsByClassName(cardBackClassName)[0];
 	var lengthToRaiseTheCard = oneSide.getBoundingClientRect().top + oneSide.offsetHeight;
-	oneSide.style.transform = 'translate(0, -' + lengthToRaiseTheCard + 'px)';
+	var widthToRaiseTheCard = oneSide.getBoundingClientRect().right + oneSide.offsetWidth;
+	oneSide.style.transform = 'translate(-200px,-' + lengthToRaiseTheCard + 'px)';
 	oneSide.style.transition = 'all 0.7s ease-in-out';
-	anotherSide.style.transform = 'translate(0, -' + lengthToRaiseTheCard + 'px)';
+	anotherSide.style.transform = 'translate(-200px,-' + lengthToRaiseTheCard + 'px)';
 	anotherSide.style.transition = 'all 0.7s ease-in-out';
 	//oneSide.style.cssText = 'transform: translate(0, -400px); transition: all 0.1s ease-in-out';
 	//anotherSide.style.cssText = 'transform: translate(0, -400px); transition: all 0.1s ease-in-out';
+}
+
+function createNewInnerCard(parentCard) {
+	var newInnerCard = document.createElement('div');
 }
 
 function boundInnerCardAppearanceToElement(card) {
@@ -189,12 +242,15 @@ function boundInnerCardAppearanceToElement(card) {
 }
 
 function showInnerCard(e) {
-	var card = e.target.parentNode.childNodes[0];
+	var dataOfCurrentChoice = e.params.data;
+	var cardCorrespondingChoiceNumber = parseInt(dataOfCurrentChoice.id);
+	var card = e.target.parentNode.parentNode.childNodes[cardCorrespondingChoiceNumber + 1];
+	card.style.display = 'flex';
 	var oneSide = card.getElementsByClassName('front')[0];
 	var anotherSide = card.getElementsByClassName('back')[0];
-	oneSide.style.transform = 'translate(0, 0px)';
+	oneSide.style.transform = 'translate(-200px, 0px)';
 	oneSide.style.transition = 'all 1.0s ease-in-out';
-	anotherSide.style.transform = 'translate(0, 0px)';
+	oneSide.style.transform = 'translate(-200px, 0px)';
 	anotherSide.style.transition = 'all 1.0s ease-in-out';
 	oneSide.style.visibility = 'visible';
 	anotherSide.style.visibility = 'visible';
@@ -303,12 +359,22 @@ function makeAllCardsHidden() {
 	}
 }
 
-function makeCardsAppearWhenSelected() {
-	$(cardSelectorClassName).on('select2:select', changeCardAppearanceOnSelection);
+function makeCardsAppearWhenSelected(cardSelector, cardsTypeClassName) {
+	if (cardsTypeClassName.indexOf(cardsClassName) != -1) {
+		$(cardSelector).on('select2:select', changeCardAppearanceOnSelection);
+	}
+	if (cardsTypeClassName.indexOf(innerCardsClassName) != -1) {
+		$(cardSelector).on('select2:select', showInnerCard);
+	}
 }
 
-function makeCardsDisappearWhenUnselected() {
-	$(cardSelectorClassName).on('select2:unselecting', changeCardAppearanceOnSelection);
+function makeCardsDisappearWhenUnselected(cardSelector, cardsTypeClassName) {
+	if (cardsTypeClassName.indexOf(cardsClassName) != -1) {
+		$(cardSelector).on('select2:unselecting', changeCardAppearanceOnSelection);
+	}
+	if (cardsTypeClassName.indexOf(innerCardsClassName) != -1) {
+		$(cardSelector).on('select2:unselecting', closeInnerCard);
+	}
 }
 
 function changeCardAppearanceOnSelection(e) {
@@ -452,7 +518,7 @@ function clickOnCloseAreaHandler(e) {
 		}
 	}
 	
-	var optionElementsFromCardsDropdown = [];
+	/*var optionElementsFromCardsDropdown = [];
 	var optionElementsCollection = cardsDropdown.getElementsByTagName('option');
 	for (var i = 0; i < optionElementsCollection.length; i++) {
 		optionElementsFromCardsDropdown.push(optionElementsCollection[i]);
@@ -464,7 +530,7 @@ function clickOnCloseAreaHandler(e) {
 		if (optionElementsFromCardsDropdown.includes(cardsDropdown.childNodes[i])) {
 			optionNodesFromCardsDropdown.push(cardsDropdown.childNodes[i]);
 		}
-	}
+	}*/
 	
 	if (indexOfCardToClose != -1) {
 		//cardsDropdown.removeChild(optionNodesFromCardsDropdown[indexOfCardToClose]);
