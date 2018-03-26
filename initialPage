@@ -26,46 +26,24 @@
 
 .material-card {
   display: flex;
-  border: 2px solid black;
+  //border: 2px solid black;
   margin: 10px 10px 10px 10px;
   width: 400px;
   height: 399px;
   justify-content: center;
-  background-color: gray;
-  overflow: scroll;
+  background-color: none;
+  //overflow: scroll;
   position: relative;
   perspective: 1000px;
 }
 
 .front, .back {
+	border: 1px solid darkgray;
 	backface-visibility: hidden;
 	position: absolute;
 	width: 100%;
 	height: 100%;
 	transition: transform 1s;
-}
-
-
-.front1, .back1 {
-	backface-visibility: hidden;
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	transition: transform 1s;
-}
-
-.front1 {
-background-color: skyblue;
-  z-index: 2;
-  border: 2px solid black;
-  visibility: hidden;
-}
-
-.back1 {
-background-color: lightgreen;
-  transform: rotateY(180deg);
-  border: 2px solid black;
-  visibility: hidden;
 }
 
 .front {
@@ -78,28 +56,11 @@ background-color: lightgreen;
   transform: rotateY(180deg);
 }
 
-/*#material-card_2 {
-	width: 400px;
-}
-
-#material-card_5 {
-	width: 100px;
-}
-
-#material-card_7 {
-	width: 250px;
-}*/
 .select2
 {
  width: 300px;
  float: right;
  clear: right;
-}
-.bottomZone {
-  display: flex;
-  width: 100%;
-  height: 100px;
-  background: darkgray;
 }
 
 .newTaskContainer {
@@ -128,6 +89,33 @@ background-color: lightgreen;
 	width: 100%;
 }
 
+.titleText {
+	background-color: skyblue;
+	border: none;
+	width: 100%;
+	height: auto;
+	resize: none;
+	font-family: serif;
+	font-size: 100%;
+	font-weight: bold;
+}
+
+.taskText {
+	background-color: skyblue;
+	border: none;
+	width: 100%;
+	height: auto;
+	resize: none;
+	font-family: serif;
+	font-size: 100%;
+}
+
+.boxsizingBorder {
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+
 		</style>
 	</head>
     <body>
@@ -137,7 +125,7 @@ background-color: lightgreen;
   </div>
   <div class='barNewTaskInsides'> 
   <input type='text' class='barNewTaskInsidesTitle' name='Title' value='Title'/>
-  <select class = 'select2' name='cards' multiple='multiple'></select>
+  <!--<select class = 'select2' name='cards' multiple='multiple'></select>-->
   <input type='text' class='barNewTaskInsidesTask' name='Task' value='Task'/>
   <input type='button' class='addNewTaskButton' value='Add'/>
   </div>
@@ -249,13 +237,19 @@ background-color: lightgreen;
 	var hideShowBarNewTaskClassName = 'hideShowBarNewTask';
 	var barNewTaskInsidesClassName = 'barNewTaskInsides';
 	var addNewTaskButtonClassName = 'addNewTaskButton';
+	var addNewSubtaskButtonClassName = 'addNewSubtaskButton';
 	var barNewTaskInsidesTitleClassName = 'barNewTaskInsidesTitle';
 	var barNewTaskInsidesTaskClassName = 'barNewTaskInsidesTask';
+	var newSubtaskInsidesTitleClassName = 'newSubtaskInsidesTitle';
+	var newSubtaskInsidesTaskClassName = 'newSubtaskInsidesTask';
 	var selectSubtasksClassName = 'select2-subtasks';
+	var taskTextClassName = 'taskText';
+	var titleTextClassName = 'titleText';
+	var boxSizingItemsClassName = 'boxsizingBorder';
 	
 	var cardsContainerClassName = 'cardsContainer';
 	var cardsClassName = 'material-card';
-	var innerCardsClassName = 'inner-material-card';
+	var innerCardsClassName = 'inner-card';
 	var cardAreasClassName = 'cardArea';
 	var cardFrontClassName = 'front';
 	var cardBackClassName = 'back';
@@ -277,7 +271,7 @@ makeCardsDraggable(cards);
 makeCardsFlippable(cards);
 makeCardsFlippable(innerCards);
 makeCardsCloseable(cards);
-$(cardsContainer).on('DOMNodeInserted', handleNewCardAppearance);
+//$(cardsContainer).on('DOMNodeInserted', handleNewCardAppearance);
 	
 	initial();
 
@@ -285,8 +279,7 @@ $(cardsContainer).on('DOMNodeInserted', handleNewCardAppearance);
 		$(document).ready(makeHideShowButtonReactOnClick);
 		$(document).ready(makeAddButtonAddNewTask);
 		var cardsContainer = document.getElementsByClassName(cardsContainerClassName)[0];
-		cardsContainer.addEventListener('DOMNodeInserted', configureCardsBackForSubtasks);
-		initializePlaceholderForSubtasksSelect();
+		//cardsContainer.addEventListener('DOMNodeInserted', configureCardsBackForSubtasks);
 	}
 	
 	function makeHideShowButtonReactOnClick() {
@@ -310,93 +303,146 @@ $(cardsContainer).on('DOMNodeInserted', handleNewCardAppearance);
 		var addButton = document.getElementsByClassName(addNewTaskButtonClassName)[0];
 		addButton.addEventListener('click', createNewTask);
 	}
-
+	
 	function createNewTask(e) {
 		var cardsContainer = document.getElementsByClassName(cardsContainerClassName)[0];
-	
-		var numberOfCardAreas = document.getElementsByClassName('cardArea').length + 1;
-		var newCardArea = document.createElement('div');
-		newCardArea.className = 'cardArea';
-		newCardArea.id = 'cardArea_' + numberOfCardAreas;
-		newCardArea.style.display = 'flex';
-		
-		var newCard = document.createElement('div');
-		newCard.className = 'material-card';
-		newCard.id = 'material-card_' + numberOfCardAreas;
-		newCard.style.display = 'flex';
-		
-		var newCardFront = document.createElement('div');
-		newCardFront.className = 'front';
+		var newCardArea = createNewMaterialCard(cardsContainer, cardsClassName);
+		newCardFront = newCardArea.getElementsByClassName(cardFrontClassName)[0];
+
 		var barNewTaskInsidesTitle = document.getElementsByClassName(barNewTaskInsidesTitleClassName)[0];
 		var barNewTaskInsidesTask = document.getElementsByClassName(barNewTaskInsidesTaskClassName)[0];
-		newCardFront.innerHTML = '<h1>' + barNewTaskInsidesTitle.value + '</h1><p/>' + barNewTaskInsidesTask.value;
-		
-		var newCardBack = document.createElement('div');
-		newCardBack.className = 'back';
-	
-		newCard.appendChild(newCardFront);
-		newCard.appendChild(newCardBack);
-		newCardArea.appendChild(newCard);
+		newCardFront.innerHTML = '<textarea class="'+ titleTextClassName + ' ' + boxSizingItemsClassName + '">' + barNewTaskInsidesTitle.value + '</textarea><p/><textarea class="'+ taskTextClassName + ' ' + boxSizingItemsClassName + '">' + barNewTaskInsidesTask.value + '</textarea>';
 		cardsContainer.insertBefore(newCardArea, cardsContainer.childNodes[cardsContainer.childNodes.length - 2]);
+		
+		configureNewCard(newCardArea.childNodes[0]);
+		writeButtonFunctionsOnButton(newCardArea.childNodes[0]);
+		addSubtaskConfigurationAbility(newCardArea.childNodes[0]);
+		
+		var titleTextarea = newCardFront.getElementsByClassName(titleTextClassName)[0];
+		titleTextarea.addEventListener('focus', clearTextAreaOnClick);
+		titleTextarea.addEventListener('focusout', {handleEvent: restoreDefaultTextIfEmpty, defaultText: 'Title'});
+		
+		var taskTextarea = newCardFront.getElementsByClassName(taskTextClassName)[0];
+		var title = newCardFront.getElementsByClassName(titleTextClassName)[0];
+		var startOfFreeArea = parseInt(title.getBoundingClientRect().bottom);
+		var endOfFreeArea = parseInt(newCardArea.childNodes[0].getBoundingClientRect().bottom) - parseInt(newCardArea.childNodes[0].getBoundingClientRect().top);
+		taskTextarea.style.height = parseInt(endOfFreeArea - startOfFreeArea) + 'px';
+		taskTextarea.addEventListener('focus', clearTextAreaOnClick);
+		taskTextarea.addEventListener('focusout', {handleEvent: restoreDefaultTextIfEmpty, defaultText: 'Task'});
 	}
 	
-	function configureCardsBackForSubtasks(e) {
-	if (e.target.className && e.target.className.indexOf(closeableAreaOnCardClassName) != -1 && e.target.parentNode.className.indexOf(cardBackClassName) != -1 && e.target.className.indexOf(selectSubtasksClassName) == -1) {
-			var allCardsOnPage = document.getElementsByClassName(cardsClassName);
-		for (var i = allCardsOnPage.length - 1; i < allCardsOnPage.length; i++) {
-			var front = allCardsOnPage[i].getElementsByClassName(cardFrontClassName)[0];
-			var back = allCardsOnPage[i].getElementsByClassName(cardBackClassName)[0];
-			var frontDrag = front.getElementsByClassName(draggableAreaOnCardClassName)[0];
-			var frontFlip = front.getElementsByClassName(flippableAreaOnCardClassName)[0];
-			var backDrag = back.getElementsByClassName(draggableAreaOnCardClassName)[0];
-			var backFlip = back.getElementsByClassName(flippableAreaOnCardClassName)[0];
+function writeButtonFunctionsOnButton(card) {
+	var front = card.getElementsByClassName(cardFrontClassName)[0];
+	var back = card.getElementsByClassName(cardBackClassName)[0];
+	var frontDrag = front.getElementsByClassName(draggableAreaOnCardClassName)[0];
+	var frontFlip = front.getElementsByClassName(flippableAreaOnCardClassName)[0];
+	var backDrag = back.getElementsByClassName(draggableAreaOnCardClassName)[0];
+	var backFlip = back.getElementsByClassName(flippableAreaOnCardClassName)[0];
 			
-			frontDrag.innerHTML = 'Drag';
-			backDrag.innerHTML = 'Drag';
-			frontFlip.innerHTML = 'Subtasks';
-			backFlip.innerHTML = 'Back';
-			
-			var chooseSubtaskSelect = document.createElement('select');
-		chooseSubtaskSelect.className = 'select2 ' + selectSubtasksClassName;
-		chooseSubtaskSelect.name = 'subtasks';
-		chooseSubtaskSelect.style.width = '100%';
-		back.appendChild(chooseSubtaskSelect);
-		
-		var labelAddNewSubtask = document.createElement('label');
-		labelAddNewSubtask.innerHTML = 'Add new subtask: ';
-		labelAddNewSubtask.style.width = '100%';
-		back.appendChild(labelAddNewSubtask);
-		
-		var titleOfNewSubtask = document.createElement('input');
-		titleOfNewSubtask.type = 'text';
-		titleOfNewSubtask.value = 'Title';
-		titleOfNewSubtask.style.width = '100%';
-		titleOfNewSubtask.style.background = 'paleGreen';
-		back.appendChild(titleOfNewSubtask);
-		
-		var taskOfNewSubtask = document.createElement('input');
-		taskOfNewSubtask.type = 'text';
-		taskOfNewSubtask.value = 'Task';
-		taskOfNewSubtask.style.width = '100%';
-		taskOfNewSubtask.style.height = '50%';
-		taskOfNewSubtask.style.background = 'paleGreen';
-		back.appendChild(taskOfNewSubtask);
-		
-		var addButtonForNewSubtask = document.createElement('input');
-		addButtonForNewSubtask.type = 'button';
-		addButtonForNewSubtask.value = 'Add';
-		addButtonForNewSubtask.style.width = '100%';
-		addButtonForNewSubtask.style.height = '50px';
-		back.appendChild(addButtonForNewSubtask);
-		}
-	}
+	frontDrag.innerHTML = 'Drag';
+	backDrag.innerHTML = 'Drag';
+	frontFlip.innerHTML = 'Subtasks';
+	backFlip.innerHTML = 'Back';
 }
 
-function initializePlaceholderForSubtasksSelect() {
-	$('.select2-subtasks').select2({
+function addSubtaskConfigurationAbility(card) {
+	var front = card.getElementsByClassName(cardFrontClassName)[0];
+	var back = card.getElementsByClassName(cardBackClassName)[0];
+
+	var chooseSubtaskSelect = document.createElement('select');
+	chooseSubtaskSelect.className = 'select2 ' + selectSubtasksClassName;
+	chooseSubtaskSelect.name = 'subtasks';
+	chooseSubtaskSelect.style.width = '100%';
+	back.appendChild(chooseSubtaskSelect);
+	$(chooseSubtaskSelect).select2({
 		placeholder: "Select subtask",
-		allowClear: true
+		//allowClear: true
 	});
+	var newOption = new Option();
+	$(chooseSubtaskSelect).append(newOption); //for the placeholder to show when no option is chosen
+	configureSubtasksSelectToReactOnChange(chooseSubtaskSelect);
+		
+	var labelAddNewSubtask = document.createElement('label');
+	labelAddNewSubtask.innerHTML = 'Add new subtask: ';
+	labelAddNewSubtask.style.width = '100%';
+	back.appendChild(labelAddNewSubtask);
+		
+	var titleOfNewSubtask = document.createElement('input');
+	titleOfNewSubtask.type = 'textarea';
+	titleOfNewSubtask.value = 'Title';
+	titleOfNewSubtask.className = newSubtaskInsidesTitleClassName + ' ' + taskTextClassName + ' ' + boxSizingItemsClassName;
+	titleOfNewSubtask.style.width = '100%';
+	titleOfNewSubtask.style.background = 'paleGreen';
+	titleOfNewSubtask.addEventListener('focus', clearTextAreaOnClick);
+	titleOfNewSubtask.addEventListener('focusout', {handleEvent: restoreDefaultTextIfEmpty, defaultText: 'Title'});
+	back.appendChild(titleOfNewSubtask);
+		
+	var taskOfNewSubtask = document.createElement('input');
+	taskOfNewSubtask.type = 'textarea';
+	taskOfNewSubtask.value = 'Task';
+	taskOfNewSubtask.className = newSubtaskInsidesTaskClassName + ' ' + taskTextClassName + ' ' + boxSizingItemsClassName;
+	taskOfNewSubtask.style.width = '100%';
+	taskOfNewSubtask.style.height = '50%';
+	taskOfNewSubtask.style.background = 'paleGreen';
+	taskOfNewSubtask.addEventListener('focus', clearTextAreaOnClick);
+	taskOfNewSubtask.addEventListener('focusout', {handleEvent: restoreDefaultTextIfEmpty, defaultText: 'Task'});
+	back.appendChild(taskOfNewSubtask);
+		
+	var addButtonForNewSubtask = document.createElement('input');
+	addButtonForNewSubtask.type = 'button';
+	addButtonForNewSubtask.className = addNewSubtaskButtonClassName;
+	addButtonForNewSubtask.value = 'Add';
+	addButtonForNewSubtask.style.width = '100%';
+	addButtonForNewSubtask.style.height = '50px';
+	addButtonForNewSubtask.addEventListener('click', createNewSubtask);
+	back.appendChild(addButtonForNewSubtask);
+}
+
+function createNewSubtask(e) {
+	var parentCard = e.target.parentNode.parentNode;
+	var newCard = createNewMaterialCard(parentCard, innerCardsClassName);
+	newCardFront = newCard.getElementsByClassName(cardFrontClassName)[0];
+
+	var newSubtaskInsidesTitle = e.target.parentNode.getElementsByClassName(newSubtaskInsidesTitleClassName)[0];
+	var newSubtaskInsidesTask = e.target.parentNode.getElementsByClassName(newSubtaskInsidesTaskClassName)[0];
+	newCardFront.innerHTML = '<textarea class="'+ titleTextClassName + ' ' + boxSizingItemsClassName + '">' + newSubtaskInsidesTitle.value + '</textarea><p/><textarea class="'+ taskTextClassName + ' ' + boxSizingItemsClassName + '">' + newSubtaskInsidesTask.value + '</textarea>';
+	parentCard.appendChild(newCard);
+	
+	configureNewCard(newCard);
+	addSubtaskConfigurationAbility(newCard);
+	newCard.style.display = 'flex';
+	raiseInnerCardsBeforeAppearance(newCard);
+	
+	var titleTextarea = newCardFront.getElementsByClassName(titleTextClassName)[0];
+	titleTextarea.addEventListener('focus', clearTextAreaOnClick);
+	titleTextarea.addEventListener('focusout', {handleEvent: restoreDefaultTextIfEmpty, defaultText: 'Title'});
+		
+	var taskTextarea = newCardFront.getElementsByClassName(taskTextClassName)[0];
+	var title = newCardFront.getElementsByClassName(titleTextClassName)[0];
+	var startOfFreeArea = parseInt(title.getBoundingClientRect().bottom);
+	var endOfFreeArea = parseInt(newCard.getBoundingClientRect().bottom) - parseInt(newCard.getBoundingClientRect().top);
+	taskTextarea.style.height = parseInt(endOfFreeArea - startOfFreeArea) + 'px';
+	taskTextarea.addEventListener('focus', clearTextAreaOnClick);
+	taskTextarea.addEventListener('focusout', {handleEvent: restoreDefaultTextIfEmpty, defaultText: 'Task'});
+	
+	var subtasksSelect = parentCard.getElementsByClassName(selectSubtasksClassName)[0];
+	var newOption = new Option(newSubtaskInsidesTitle.value, parentCard.getElementsByClassName(innerCardsClassName).length);
+	$(subtasksSelect).append(newOption);
+}
+
+function configureSubtasksSelectToReactOnChange(subtasksSelect) {
+	makeCardsAppearWhenSelected(subtasksSelect, innerCardsClassName);
+	makeCardsDisappearWhenUnselected(subtasksSelect, innerCardsClassName);
+}
+
+function clearTextAreaOnClick(e) {
+	e.target.value = '';
+}
+
+function restoreDefaultTextIfEmpty(e) {
+	if (e.target.value == '') {
+		e.target.value = this.defaultText;
+	}
 }
 </script>
     </body>
