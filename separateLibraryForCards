@@ -139,7 +139,8 @@ function configureNewCard(card) {
 function setNewCardOrder(card) {
 	var maxCardOrder = 0;
 	if (document.getElementsByClassName(cardAreasClassName).length > 1) {
-		maxCardOrder = document.getElementsByClassName(cardAreasClassName)[cardAreas.length - 2].style.order;
+		maxCardOrder = cardAreas.length;
+		//maxCardOrder = document.getElementsByClassName(cardAreasClassName)[cardAreas.length - 2].style.order;
 	}
 	card.parentNode.style.order = Number(maxCardOrder) + 1;
 }
@@ -556,7 +557,7 @@ function createFlippableArea() {
 		flippableArea.className = flippableAreaOnCardClassName;
 		flippableArea.style.width = '30%';
 		flippableArea.style.height = '20px';
-		flippableArea.style.backgroundColor = 'lightgray';
+		//flippableArea.style.backgroundColor = 'lightgray';
 		flippableArea.style.float = 'right';
 		flippableArea.addEventListener('click', clickOnFlipAreaHandler);
 	return flippableArea;
@@ -618,7 +619,7 @@ function createDraggableArea() {
 		draggableArea.className = draggableAreaOnCardClassName;
 		draggableArea.style.width = '40%';
 		draggableArea.style.height = '20px';
-		draggableArea.style.backgroundColor = 'darkgray';
+		//draggableArea.style.backgroundColor = 'darkgray';
 		draggableArea.style.float = 'right';
 		draggableArea.addEventListener('mousedown', mouseDownOnCardContainerHandler);
 	return draggableArea;
@@ -695,7 +696,8 @@ function mouseUpOnCardAreaHandler(e) {
     this.onmouseup = null;
     document.body.removeChild(this);
 		
-    var elementUnderCursor = document.elementFromPoint(e.pageX, e.pageY);
+    var elementUnderCursor = document.elementFromPoint(e.pageX - window.pageXOffset, e.pageY - window.pageYOffset);
+	 console.log(elementUnderCursor);
 	
     var numberOfAreaToMoveElementTo = findIdOfAreaToMoveOriginalElementTo(elementUnderCursor);
     var cardToMove = document.getElementById(cardToMoveId);
