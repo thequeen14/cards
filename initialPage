@@ -69,12 +69,29 @@ background-color: lightgreen;
 
 .titleBarNewTask {
 	width: 100%;
+	height: 50px;
 	background: lightgray;
+	border-radius: 10px;
+	padding: 3px;
 }
 
-.hideShowBarNewTask {
-	float: right;
+.titleBarNewTask > label {
+	float: left;
+	height: 50%;
+	margin: 10px 10px 10px 10px;
+	font-weight: bold;
+	color: darkslategray;
 }
+
+.expandButtonSVG {
+	//width: 25px;
+	//height: 25px;
+	float: right;
+	margin: 10px 10px 10px 10px;
+	//border: 2px solid slategray;
+	//border-radius: 50%;
+}
+
 
 .barNewTaskInsides {
 	display: none;
@@ -116,12 +133,31 @@ background-color: lightgreen;
             box-sizing: border-box;
 }
 
+.barNewTaskInsidesTitle, .barNewTaskInsidesTask {
+	height: 30px;
+	border-radius: 10px;
+	padding: 3px;
+	font-family: sans serif;
+	font-size: 100%;
+	color: slategray;
+}
+
+.addNewTaskButton {
+	border-radius: 10px;
+	font-weight: bold;
+	color: darkslategray;
+}
 		</style>
 	</head>
     <body>
 <div class="newTaskContainer">
   <div class="titleBarNewTask">
-  New Task<input type='button' class='hideShowBarNewTask' value='+'/>
+  <label class="newTaskLabel">New Task</label>
+  <div class='expandButtonSVG'><svg class='hideShowBarNewTask' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/>
+    <path d="M0 0h24v24H0z" fill="none"/>
+	</svg></div>
+  <!--<label class="newTaskLabel">New Task</label><input type='button' class='hideShowBarNewTask' value='+'/>-->
   </div>
   <div class='barNewTaskInsides'> 
   <input type='text' class='barNewTaskInsidesTitle' name='Title' value='Title'/>
@@ -131,102 +167,6 @@ background-color: lightgreen;
   </div>
   </div>
 <div class='cardsContainer' id='cardsContainer_0'>
-  <!--<div class='cardArea' id='cardArea_1'>
-      <div class='material-card' id='material-card_1'>
-	  <div class='front'>
-	  1
-	  </div>
-	  <div class='back'>
-	  1 back
-	  <input type='button' value='More' id='testMoreButton'/>
-	  <div class='inner-material-card'><div class='front'><input type='button' value='More' id='testEvenMoreButton'/><input type='button' value='Close' class='closeInnerCard1'>1card another front</div>
-	  <div class='back'>
-	  <input type='button' value='Back' id='testBackButton'/><input type='button' value='Close' class='closeInnerCard2'>1card another back
-	  <div class='inner-material-card'><div class='front'>1card one more front</div><div class='back'>1card one more back</div></div>
-	  </div></div>
-	  </div>
-	  </div>
-  </div>
-  <div class='cardArea' id='cardArea_2'>
-      <div class='material-card' id='material-card_2'>
-	  <div class='front'>
-	  2
-	  </div>
-	  <div class='back'>2 back 
-	  </div>
-	  </div>
-  </div>
-  <div class='cardArea' id='cardArea_3'>
-      <div class='material-card' id='material-card_3'>
-	  <div class='front'>
-	  <div>3</div>
-	  </div>
-	  <div class='back'>3 back
-	  <div class='inner-material-card'><div class='front'>3card one more front</div><div class='back'>3card one more back</div></div>
-	  </div>
-	  </div>
-  </div>
-  <div class='cardArea' id='cardArea_4'>
-      <div class='material-card' id='material-card_4'>
-	  <div class='front'>
-	  4
-	  </div>
-	  <div class='back'>4 back
-	  <div class='inner-material-card'><div class='front'>4card one more front</div><div class='back'>4card one more back</div></div>
-	  </div>
-	  </div>
-	  </div>
-  
-  <div class='cardArea' id='cardArea_5'>
-      <div class='material-card' id='material-card_5'>
-	  <div class='front'>
-	  5
-	  </div>
-	  <div class='back'>5 back
-	  <div class='inner-material-card'><div class='front'>5card one more front</div><div class='back'>5card one more back</div></div>
-	  </div>
-	  </div>
-	  </div>
-  <div class='cardArea' id='cardArea_6'>
-      <div class='material-card' id='material-card_6'>
-	  <div class='front'>
-	  6
-	  </div>
-	  <div class='back'>6 back
-	  <div class='inner-material-card'><div class='front'>6card one more front</div><div class='back'>6card one more back</div></div>
-	  </div>
-	  </div>
-	  </div>
-  <div class='cardArea' id='cardArea_7'>
-      <div class='material-card' id='material-card_7'>
-	  <div class='front'>
-	  <div>7</div>
-	  </div>
-	  <div class='back'>7 back
-	  <div class='inner-material-card'><div class='front'>7card one more front</div><div class='back'>7card one more back</div></div>
-	  </div>
-	  </div>
-	</div>
-	<div class='cardArea' id='cardArea_8'>
-      <div class='material-card' id='material-card_8'>
-	  <div class='front'>
-	  <div>8</div>
-	  </div>
-	  <div class='back'>8 back
-	  <div class='inner-material-card'><div class='front'>8card one more front</div><div class='back'>8card one more back</div></div>
-	  </div>
-	  </div>
-	</div>
-	<div class='cardArea' id='cardArea_9'>
-      <div class='material-card' id='material-card_9'>
-	  <div class='front'>
-	  <div>9</div>
-	  </div>
-	  <div class='back'>9 back
-	  <div class='inner-material-card'><div class='front'>10card front</div><div class='back'>10card back</div></div>
-	  </div>
-	  </div>
-	</div>-->
   <div style='clear: both' class='cardsContainerStretch'></div>
  
   </div>
@@ -246,6 +186,12 @@ background-color: lightgreen;
 	var taskTextClassName = 'taskText';
 	var titleTextClassName = 'titleText';
 	var boxSizingItemsClassName = 'boxsizingBorder';
+	var expandButtonSVGWrappingDivClassName = 'expandButtonSVG';
+	var innerHTMLForExpandLessSVG = '<svg class=\'' + hideShowBarNewTaskClassName + '\' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'
+	var innerHTMLForExpandMoreSVG = '<svg class=\'' + hideShowBarNewTaskClassName + '\' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'
+	var innerHTMLForSubtasks = '<svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 15l-6 6-1.42-1.42L15.17 16H4V4h2v10h9.17l-3.59-3.58L13 9l6 6z"/></svg>'
+	var innerHTMLForSubtasksBackToMainTask = '<svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>'
+	var innerHTMLForShuffleCards = '<svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>'
 	
 	var cardsContainerClassName = 'cardsContainer';
 	var cardsClassName = 'material-card';
@@ -278,8 +224,17 @@ makeCardsCloseable(cards);
 	function initial() {
 		$(document).ready(makeHideShowButtonReactOnClick);
 		$(document).ready(makeAddButtonAddNewTask);
+		var barNewTaskInsidesTitle = document.getElementsByClassName(barNewTaskInsidesTitleClassName)[0];
+		var barNewTaskInsidesTask = document.getElementsByClassName(barNewTaskInsidesTaskClassName)[0];
+		makeTextInputAutoclear(barNewTaskInsidesTitle, barNewTaskInsidesTitle.value);
+		makeTextInputAutoclear(barNewTaskInsidesTask, barNewTaskInsidesTask.value);
 		var cardsContainer = document.getElementsByClassName(cardsContainerClassName)[0];
 		//cardsContainer.addEventListener('DOMNodeInserted', configureCardsBackForSubtasks);
+	}
+	
+	function makeTextInputAutoclear(textInput, defaultText) {
+		textInput.addEventListener('focus', clearTextAreaOnClick);
+		textInput.addEventListener('focusout', {handleEvent: restoreDefaultTextIfEmpty, defaultText: defaultText});
 	}
 	
 	function makeHideShowButtonReactOnClick() {
@@ -289,13 +244,16 @@ makeCardsCloseable(cards);
 	
 	function btnHideShowTaskBarClickHandler(e) {
 		var contentToShowOnClick = document.getElementsByClassName(barNewTaskInsidesClassName)[0];
+		var btnHideShowSVGWrappingDiv = document.getElementsByClassName(expandButtonSVGWrappingDivClassName)[0];
 		if (!contentToShowOnClick.style.display || contentToShowOnClick.style.display == 'none') {
 			contentToShowOnClick.style.display = 'flex';
-			e.target.value = '-';
+			btnHideShowSVGWrappingDiv.innerHTML = innerHTMLForExpandLessSVG;
+			makeHideShowButtonReactOnClick();
 		}
 		else {
 			contentToShowOnClick.style.display = 'none';
-			e.target.value = '+';
+			btnHideShowSVGWrappingDiv.innerHTML = innerHTMLForExpandMoreSVG;
+			makeHideShowButtonReactOnClick();
 		}
 	}
 	
@@ -334,15 +292,19 @@ makeCardsCloseable(cards);
 function writeButtonFunctionsOnButton(card) {
 	var front = card.getElementsByClassName(cardFrontClassName)[0];
 	var back = card.getElementsByClassName(cardBackClassName)[0];
-	var frontDrag = front.getElementsByClassName(draggableAreaOnCardClassName)[0];
 	var frontFlip = front.getElementsByClassName(flippableAreaOnCardClassName)[0];
-	var backDrag = back.getElementsByClassName(draggableAreaOnCardClassName)[0];
+	var frontClose = front.getElementsByClassName(closeableAreaOnCardClassName)[0];
 	var backFlip = back.getElementsByClassName(flippableAreaOnCardClassName)[0];
-			
-	frontDrag.innerHTML = 'Drag';
-	backDrag.innerHTML = 'Drag';
-	frontFlip.innerHTML = 'Subtasks';
-	backFlip.innerHTML = 'Back';
+	var backClose = back.getElementsByClassName(closeableAreaOnCardClassName)[0];
+	frontFlip.innerHTML = innerHTMLForSubtasks;
+	backFlip.innerHTML = innerHTMLForSubtasksBackToMainTask;
+	
+	if (card.className.indexOf(cardsClassName) != -1) {
+		var frontDrag = front.getElementsByClassName(draggableAreaOnCardClassName)[0];
+		var backDrag = back.getElementsByClassName(draggableAreaOnCardClassName)[0];
+		frontDrag.innerHTML = innerHTMLForShuffleCards;
+		backDrag.innerHTML = innerHTMLForShuffleCards;
+	}
 }
 
 function addSubtaskConfigurationAbility(card) {
@@ -428,6 +390,8 @@ function createNewSubtask(e) {
 	var subtasksSelect = parentCard.getElementsByClassName(selectSubtasksClassName)[0];
 	var newOption = new Option(newSubtaskInsidesTitle.value, parentCard.getElementsByClassName(innerCardsClassName).length);
 	$(subtasksSelect).append(newOption);
+	
+	writeButtonFunctionsOnButton(newCard);
 }
 
 function configureSubtasksSelectToReactOnChange(subtasksSelect) {
