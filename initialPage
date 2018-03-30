@@ -12,7 +12,32 @@
 	<script src="https://code.highcharts.com/modules/series-label.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 		<style>
-			.cardsContainer {
+html {
+	height: 100%;
+}
+
+body {
+	height: 100%;
+}
+		
+.mainConfigurationMenu {
+	position: absolute;
+	z-index: 1000;
+	height: 100%;
+	width: 200px;
+	display: none;
+	background-color: white;
+	border: 1px solid lightgray;
+}
+
+.closeMainConfigurationMenu {
+	float: right;
+	width: 20px;
+	height: 20px;
+	margin: 5px 5px 5px 5px;
+}
+		
+.cardsContainer {
   display: flex;
   width: 100%;
   height: 100%;
@@ -32,7 +57,6 @@
   height: 399px;
   justify-content: center;
   background-color: none;
-  //overflow: scroll;
   position: relative;
   perspective: 1000px;
 }
@@ -48,6 +72,7 @@
 
 .front {
 background-color: skyblue;
+opacity: 0.9;
   z-index: 2;
 }
 
@@ -71,7 +96,6 @@ background-color: lightgreen;
 	width: 100%;
 	height: 50px;
 	background: lightgray;
-	border-radius: 10px;
 	padding: 3px;
 }
 
@@ -84,12 +108,8 @@ background-color: lightgreen;
 }
 
 .expandButtonSVG {
-	//width: 25px;
-	//height: 25px;
 	float: right;
 	margin: 10px 10px 10px 10px;
-	//border: 2px solid slategray;
-	//border-radius: 50%;
 }
 
 
@@ -99,32 +119,55 @@ background-color: lightgreen;
 }
 
 .barNewTaskInsidesTitle {
-	width: 50%;
+	width: 40%;
 }
 
 .barNewTaskInsidesTask {
-	width: 100%;
+	width: 50%;
 }
 
-.titleText {
-	background-color: skyblue;
+.barNewTaskInsidesTitle, .barNewTaskInsidesTask {
+	height: 30px;
+	padding: 3px;
+	font-family: sans serif;
+	font-size: 100%;
+	color: slategray;
+}
+
+.addNewTaskButton {
+	font-weight: bold;
+	color: darkslategray;
+	width: 10%;
+}
+
+.titleText, .taskText {
 	border: none;
 	width: 100%;
 	height: auto;
 	resize: none;
 	font-family: serif;
 	font-size: 100%;
+}
+
+.titleText {
+	background-color: skyblue;
 	font-weight: bold;
 }
 
 .taskText {
 	background-color: skyblue;
-	border: none;
-	width: 100%;
-	height: auto;
-	resize: none;
-	font-family: serif;
-	font-size: 100%;
+}
+
+.addNewSubtaskButtonSVG {
+	float: right;
+	width: 30px;
+	height: 30px;
+	margin: 5px 5px 5px 5px;
+}
+
+.elementsLayingOverFunctionalElements {
+	pointer-events: none;
+	fill: darkslategray;
 }
 
 .boxsizingBorder {
@@ -133,25 +176,34 @@ background-color: lightgreen;
             box-sizing: border-box;
 }
 
-.barNewTaskInsidesTitle, .barNewTaskInsidesTask {
-	height: 30px;
-	border-radius: 10px;
-	padding: 3px;
-	font-family: sans serif;
-	font-size: 100%;
-	color: slategray;
+.draggableAreaOnCard, .flippableAreaOnCard, .closeableAreaOnCard{
+	margin-bottom: 5px;
 }
 
-.addNewTaskButton {
-	border-radius: 10px;
-	font-weight: bold;
-	color: darkslategray;
+.draggableAreaOnCard, .flippableAreaOnCard {
+	display: flex;
+	justify-content: center;
+}
+
+.showMenuWithConfigurationButton {
+	display: inline-block;
+	float: left;
+	margin: 10px 10px 10px 10px;
 }
 		</style>
 	</head>
     <body>
+<div class='mainConfigurationMenu'><div class='closeMainConfigurationMenu'><svg class='hideMainConfigurationMenu elementsLayingOverFunctionalElements' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+    <path d="M0 0h24v24H0z" fill="none"/>
+</svg></div>
+<div class='backgroundStyleChooseDiv'><label>Choose background style</label><div class='showHideBackgroundStyleChoice'></div><div class='backgroundStyleChoices'></div></div>
 <div class="newTaskContainer">
   <div class="titleBarNewTask">
+  <div class='showMenuWithConfigurationButton'><svg class='showMenuWithConfigurationButtonSVG elementsLayingOverFunctionalElements' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 0h24v24H0z" fill="none"/>
+    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+</svg></div>
   <label class="newTaskLabel">New Task</label>
   <div class='expandButtonSVG'><svg class='hideShowBarNewTask' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
     <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/>
@@ -182,16 +234,26 @@ background-color: lightgreen;
 	var barNewTaskInsidesTaskClassName = 'barNewTaskInsidesTask';
 	var newSubtaskInsidesTitleClassName = 'newSubtaskInsidesTitle';
 	var newSubtaskInsidesTaskClassName = 'newSubtaskInsidesTask';
+	var showMenuWithConfigurationButtonClassName = 'showMenuWithConfigurationButton';
+	var mainConfigurationMenuClassName = 'mainConfigurationMenu';
+	var closeMainConfigurationMenuDivClassName = 'closeMainConfigurationMenu';
 	var selectSubtasksClassName = 'select2-subtasks';
 	var taskTextClassName = 'taskText';
 	var titleTextClassName = 'titleText';
 	var boxSizingItemsClassName = 'boxsizingBorder';
+	var elementsLayingOverFunctionalElementsClassName = 'elementsLayingOverFunctionalElements';
+	var addNewSubtaskButtonSVGClassName = 'addNewSubtaskButtonSVG';
 	var expandButtonSVGWrappingDivClassName = 'expandButtonSVG';
 	var innerHTMLForExpandLessSVG = '<svg class=\'' + hideShowBarNewTaskClassName + '\' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'
 	var innerHTMLForExpandMoreSVG = '<svg class=\'' + hideShowBarNewTaskClassName + '\' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'
-	var innerHTMLForSubtasks = '<svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 15l-6 6-1.42-1.42L15.17 16H4V4h2v10h9.17l-3.59-3.58L13 9l6 6z"/></svg>'
-	var innerHTMLForSubtasksBackToMainTask = '<svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>'
-	var innerHTMLForShuffleCards = '<svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>'
+	//var innerHTMLForExpandLessSVG = '<svg class=\'' + hideShowBarNewTaskClassName + ' ' + elementsLayingOverFunctionalElementsClassName + '\' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'
+	//var innerHTMLForExpandMoreSVG = '<svg class=\'' + hideShowBarNewTaskClassName + ' ' + elementsLayingOverFunctionalElementsClassName + '\' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'
+	var innerHTMLForSubtasks = '<svg class=\'' + elementsLayingOverFunctionalElementsClassName + '\' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 15l-6 6-1.42-1.42L15.17 16H4V4h2v10h9.17l-3.59-3.58L13 9l6 6z"/></svg>'
+	var innerHTMLForSubtasksBackToMainTask = '<svg class=\'' + elementsLayingOverFunctionalElementsClassName + '\' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>'
+	var innerHTMLForShuffleCards = '<svg class=\'' + elementsLayingOverFunctionalElementsClassName + '\' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>'
+	var innerHTMLForCloseArea = '<svg class=\'' + elementsLayingOverFunctionalElementsClassName + '\' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'
+	var innerHTMLForCheckArea = '<svg class=\'' + elementsLayingOverFunctionalElementsClassName + '\' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>'
+	var innerHTMLForAddArea = '<svg class=\'' + addNewSubtaskButtonSVGClassName + ' ' + elementsLayingOverFunctionalElementsClassName + '\' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>'
 	
 	var cardsContainerClassName = 'cardsContainer';
 	var cardsClassName = 'material-card';
@@ -228,12 +290,36 @@ makeCardsCloseable(cards);
 		var barNewTaskInsidesTask = document.getElementsByClassName(barNewTaskInsidesTaskClassName)[0];
 		makeTextInputAutoclear(barNewTaskInsidesTitle, barNewTaskInsidesTitle.value);
 		makeTextInputAutoclear(barNewTaskInsidesTask, barNewTaskInsidesTask.value);
-		var cardsContainer = document.getElementsByClassName(cardsContainerClassName)[0];
-		//cardsContainer.addEventListener('DOMNodeInserted', configureCardsBackForSubtasks);
+		makeShowMainMenuButtonReactOnClick();
+		makeHideMainMenuButtonReactOnClick();
+	}
+	
+	function makeShowMainMenuButtonReactOnClick() {
+		var showMenuButton = document.getElementsByClassName(showMenuWithConfigurationButtonClassName)[0];
+		showMenuButton.addEventListener('click', showMainMenuButtonClickHandler);
+	}
+	
+	function showMainMenuButtonClickHandler(e) {
+		var mainMenu = document.getElementsByClassName(mainConfigurationMenuClassName)[0];
+		if (!mainMenu.style.display || mainMenu.style.display == 'none') {
+			mainMenu.style.display = 'flex';
+		}
+	}
+	
+	function makeHideMainMenuButtonReactOnClick() {
+		var hideMenuDiv = document.getElementsByClassName(closeMainConfigurationMenuDivClassName)[0];
+		hideMenuDiv.addEventListener('click', hideMenuDivClickHandler);
+	}
+	
+	function hideMenuDivClickHandler(e) {
+		var mainMenu = document.getElementsByClassName(mainConfigurationMenuClassName)[0];
+		if (mainMenu.style.display == 'flex') {
+			mainMenu.style.display = 'none';
+		}
 	}
 	
 	function makeTextInputAutoclear(textInput, defaultText) {
-		textInput.addEventListener('focus', clearTextAreaOnClick);
+		textInput.addEventListener('focus', {handleEvent: clearTextAreaOnClick, defaultText: defaultText});
 		textInput.addEventListener('focusout', {handleEvent: restoreDefaultTextIfEmpty, defaultText: defaultText});
 	}
 	
@@ -277,17 +363,29 @@ makeCardsCloseable(cards);
 		addSubtaskConfigurationAbility(newCardArea.childNodes[0]);
 		
 		var titleTextarea = newCardFront.getElementsByClassName(titleTextClassName)[0];
-		titleTextarea.addEventListener('focus', clearTextAreaOnClick);
-		titleTextarea.addEventListener('focusout', {handleEvent: restoreDefaultTextIfEmpty, defaultText: 'Title'});
+		makeTextInputAutoclear(titleTextarea, 'Title');
 		
 		var taskTextarea = newCardFront.getElementsByClassName(taskTextClassName)[0];
 		var title = newCardFront.getElementsByClassName(titleTextClassName)[0];
 		var startOfFreeArea = parseInt(title.getBoundingClientRect().bottom);
 		var endOfFreeArea = parseInt(newCardArea.childNodes[0].getBoundingClientRect().bottom) - parseInt(newCardArea.childNodes[0].getBoundingClientRect().top);
 		taskTextarea.style.height = parseInt(endOfFreeArea - startOfFreeArea) + 'px';
-		taskTextarea.addEventListener('focus', clearTextAreaOnClick);
-		taskTextarea.addEventListener('focusout', {handleEvent: restoreDefaultTextIfEmpty, defaultText: 'Task'});
+		makeTextInputAutoclear(taskTextarea, 'Task');
 	}
+	
+	function configureNewCard(card) {
+	setNewCardOrder(card);
+	var cardToArray = [];
+	cardToArray.push(card);
+	//makeCardsCheckable(cardToArray);
+	if (card.className.indexOf(cardsClassName) != -1) {
+		makeCardsDraggable(cardToArray);
+	}
+	makeCardsFlippable(cardToArray);
+	makeCardsCloseable(cardToArray);
+	cards = document.getElementsByClassName(cardsClassName);
+	configureCardAreasWidth();
+}
 	
 function writeButtonFunctionsOnButton(card) {
 	var front = card.getElementsByClassName(cardFrontClassName)[0];
@@ -298,6 +396,8 @@ function writeButtonFunctionsOnButton(card) {
 	var backClose = back.getElementsByClassName(closeableAreaOnCardClassName)[0];
 	frontFlip.innerHTML = innerHTMLForSubtasks;
 	backFlip.innerHTML = innerHTMLForSubtasksBackToMainTask;
+	frontClose.innerHTML = innerHTMLForCloseArea;
+	backClose.innerHTML = innerHTMLForCloseArea;
 	
 	if (card.className.indexOf(cardsClassName) != -1) {
 		var frontDrag = front.getElementsByClassName(draggableAreaOnCardClassName)[0];
@@ -310,6 +410,11 @@ function writeButtonFunctionsOnButton(card) {
 function addSubtaskConfigurationAbility(card) {
 	var front = card.getElementsByClassName(cardFrontClassName)[0];
 	var back = card.getElementsByClassName(cardBackClassName)[0];
+	
+	/*var emptyDiv = document.createElement('div');
+	emptyDiv.width = '100%';
+	emptyDiv.style.clear = 'both';
+	back.appendChild(emptyDiv);*/
 
 	var chooseSubtaskSelect = document.createElement('select');
 	chooseSubtaskSelect.className = 'select2 ' + selectSubtasksClassName;
@@ -326,35 +431,37 @@ function addSubtaskConfigurationAbility(card) {
 		
 	var labelAddNewSubtask = document.createElement('label');
 	labelAddNewSubtask.innerHTML = 'Add new subtask: ';
-	labelAddNewSubtask.style.width = '100%';
 	back.appendChild(labelAddNewSubtask);
+	labelAddNewSubtask.style.display = 'inline-block';
+	labelAddNewSubtask.style.width = '100%';
+	labelAddNewSubtask.style.marginTop = '10px';
+	labelAddNewSubtask.style.marginBottom = '10px';
+	labelAddNewSubtask.style.marginLeft = '5px';
 		
-	var titleOfNewSubtask = document.createElement('input');
-	titleOfNewSubtask.type = 'textarea';
+	var titleOfNewSubtask = document.createElement('textarea');
 	titleOfNewSubtask.value = 'Title';
-	titleOfNewSubtask.className = newSubtaskInsidesTitleClassName + ' ' + taskTextClassName + ' ' + boxSizingItemsClassName;
+	titleOfNewSubtask.className = newSubtaskInsidesTitleClassName + ' ' + titleTextClassName + ' ' + boxSizingItemsClassName;
 	titleOfNewSubtask.style.width = '100%';
 	titleOfNewSubtask.style.background = 'paleGreen';
-	titleOfNewSubtask.addEventListener('focus', clearTextAreaOnClick);
-	titleOfNewSubtask.addEventListener('focusout', {handleEvent: restoreDefaultTextIfEmpty, defaultText: 'Title'});
+	makeTextInputAutoclear(titleOfNewSubtask, 'Title');
 	back.appendChild(titleOfNewSubtask);
 		
-	var taskOfNewSubtask = document.createElement('input');
-	taskOfNewSubtask.type = 'textarea';
+	var taskOfNewSubtask = document.createElement('textarea');
 	taskOfNewSubtask.value = 'Task';
 	taskOfNewSubtask.className = newSubtaskInsidesTaskClassName + ' ' + taskTextClassName + ' ' + boxSizingItemsClassName;
 	taskOfNewSubtask.style.width = '100%';
 	taskOfNewSubtask.style.height = '50%';
 	taskOfNewSubtask.style.background = 'paleGreen';
-	taskOfNewSubtask.addEventListener('focus', clearTextAreaOnClick);
-	taskOfNewSubtask.addEventListener('focusout', {handleEvent: restoreDefaultTextIfEmpty, defaultText: 'Task'});
+	makeTextInputAutoclear(taskOfNewSubtask, 'Task');
 	back.appendChild(taskOfNewSubtask);
 		
-	var addButtonForNewSubtask = document.createElement('input');
-	addButtonForNewSubtask.type = 'button';
+	var addButtonForNewSubtask = document.createElement('div');
+	//addButtonForNewSubtask.type = 'button';
 	addButtonForNewSubtask.className = addNewSubtaskButtonClassName;
-	addButtonForNewSubtask.value = 'Add';
-	addButtonForNewSubtask.style.width = '100%';
+	//addButtonForNewSubtask.value = 'Add';
+	addButtonForNewSubtask.innerHTML = innerHTMLForAddArea;
+	addButtonForNewSubtask.style.float = 'right';
+	addButtonForNewSubtask.style.clear = 'both';
 	addButtonForNewSubtask.style.height = '50px';
 	addButtonForNewSubtask.addEventListener('click', createNewSubtask);
 	back.appendChild(addButtonForNewSubtask);
@@ -376,16 +483,14 @@ function createNewSubtask(e) {
 	raiseInnerCardsBeforeAppearance(newCard);
 	
 	var titleTextarea = newCardFront.getElementsByClassName(titleTextClassName)[0];
-	titleTextarea.addEventListener('focus', clearTextAreaOnClick);
-	titleTextarea.addEventListener('focusout', {handleEvent: restoreDefaultTextIfEmpty, defaultText: 'Title'});
+	makeTextInputAutoclear(titleTextarea, 'Title');
 		
 	var taskTextarea = newCardFront.getElementsByClassName(taskTextClassName)[0];
 	var title = newCardFront.getElementsByClassName(titleTextClassName)[0];
 	var startOfFreeArea = parseInt(title.getBoundingClientRect().bottom);
 	var endOfFreeArea = parseInt(newCard.getBoundingClientRect().bottom) - parseInt(newCard.getBoundingClientRect().top);
 	taskTextarea.style.height = parseInt(endOfFreeArea - startOfFreeArea) + 'px';
-	taskTextarea.addEventListener('focus', clearTextAreaOnClick);
-	taskTextarea.addEventListener('focusout', {handleEvent: restoreDefaultTextIfEmpty, defaultText: 'Task'});
+	makeTextInputAutoclear(taskTextarea, 'Task');
 	
 	var subtasksSelect = parentCard.getElementsByClassName(selectSubtasksClassName)[0];
 	var newOption = new Option(newSubtaskInsidesTitle.value, parentCard.getElementsByClassName(innerCardsClassName).length);
@@ -400,7 +505,9 @@ function configureSubtasksSelectToReactOnChange(subtasksSelect) {
 }
 
 function clearTextAreaOnClick(e) {
-	e.target.value = '';
+	if (e.target.value == this.defaultText) {
+		e.target.value = '';
+	}
 }
 
 function restoreDefaultTextIfEmpty(e) {
