@@ -122,7 +122,7 @@ function handleNewCardAppearance(e) {
 	}
 }
 
-function configureNewCard(card) {
+/*function configureNewCard(card) {
 	setNewCardOrder(card);
 	var cardToArray = [];
 	cardToArray.push(card);
@@ -134,7 +134,7 @@ function configureNewCard(card) {
 	makeCardsCloseable(cardToArray);
 	cards = document.getElementsByClassName(cardsClassName);
 	configureCardAreasWidth();
-}
+}*/
 
 function setNewCardOrder(card) {
 	var maxCardOrder = 0;
@@ -485,8 +485,9 @@ function makeCardsCloseable(cardsToMakecloseable) {
 }
 
 function createCloseableArea() {
-	var closeableArea = document.createElement('input');
-		closeableArea.type = 'button';
+	var closeableArea = document.createElement('div');
+	//var closeableArea = document.createElement('input');
+		//closeableArea.type = 'button';
 		closeableArea.className = closeableAreaOnCardClassName;
 		closeableArea.style.width = '10%';
 		closeableArea.style.height = '20px';
@@ -697,7 +698,6 @@ function mouseUpOnCardAreaHandler(e) {
     document.body.removeChild(this);
 		
     var elementUnderCursor = document.elementFromPoint(e.pageX - window.pageXOffset, e.pageY - window.pageYOffset);
-	 console.log(elementUnderCursor);
 	
     var numberOfAreaToMoveElementTo = findIdOfAreaToMoveOriginalElementTo(elementUnderCursor);
     var cardToMove = document.getElementById(cardToMoveId);
