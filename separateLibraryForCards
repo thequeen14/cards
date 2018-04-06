@@ -597,8 +597,10 @@ function clickOnFlipAreaHandler(e) {
 }
 
 function flipCard(sideFlipFrom, sideFlipTo) {
-	sideFlipFrom.style.cssText = 'transform: rotateY(180deg)';
-	sideFlipTo.style.cssText = 'transform: rotateY(360deg)';
+	sideFlipFrom.style.transform = 'rotateY(180deg)';
+	sideFlipTo.style.transform = 'rotateY(360deg)';
+	//sideFlipFrom.style.cssText = 'transform: rotateY(180deg)';
+	//sideFlipTo.style.cssText = 'transform: rotateY(360deg)';
 }
 
 function setInitialCardOrders() {
