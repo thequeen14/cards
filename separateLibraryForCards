@@ -204,8 +204,8 @@ function closeInnerCard(e) {
 	}*/
 	
 	if (card.className.inexOf(innerCardsClassName) != -1) {
-		card.style.display = 'none';
 		raiseInnerCardsBeforeAppearance(card);
+		card.style.display = 'none';
 	}
 	
 	//raiseInnerCardsBeforeAppearance(oneSideToClose.parentNode);
@@ -222,12 +222,17 @@ function raiseCardsBeforeAppearance(cards) {
 function raiseInnerCardsBeforeAppearance(card) {
 	var oneSide = card.getElementsByClassName(cardFrontClassName)[0];
 	var anotherSide = card.getElementsByClassName(cardBackClassName)[0];
-	var lengthToRaiseTheCard = oneSide.getBoundingClientRect().top + oneSide.offsetHeight;
-	var widthToRaiseTheCard = oneSide.getBoundingClientRect().right + oneSide.offsetWidth;
-	oneSide.style.transform = 'translate(-200px,-' + lengthToRaiseTheCard + 'px)';
+	var lengthToRaiseTheCard = oneSide.getBoundingClientRect().top + oneSide.offsetHeight + window.pageYOffset;
+	//var widthToRaiseTheCard = oneSide.getBoundingClientRect().right + oneSide.offsetWidth + window.pageXOffset;;
+	
+	//oneSide.style.transform = 'translate(-200px,-' + lengthToRaiseTheCard + 'px)';
 	oneSide.style.transition = 'all 0.7s ease-in-out';
-	anotherSide.style.transform = 'translate(-200px,-' + lengthToRaiseTheCard + 'px)';
 	anotherSide.style.transition = 'all 0.7s ease-in-out';
+	//anotherSide.style.transform = 'translate(-200px,-' + lengthToRaiseTheCard + 'px)';
+	anotherSide.style.left = '0px';
+	anotherSide.style.top = '-' + lengthToRaiseTheCard + 'px';
+	oneSide.style.left = '0px';
+	oneSide.style.top = '-' + lengthToRaiseTheCard + 'px';
 	//oneSide.style.cssText = 'transform: translate(0, -400px); transition: all 0.1s ease-in-out';
 	//anotherSide.style.cssText = 'transform: translate(0, -400px); transition: all 0.1s ease-in-out';
 }
@@ -249,10 +254,12 @@ function showInnerCard(e) {
 	card.style.display = 'flex';
 	var oneSide = card.getElementsByClassName('front')[0];
 	var anotherSide = card.getElementsByClassName('back')[0];
-	oneSide.style.transform = 'translate(-200px, 0px)';
+	//oneSide.style.transform = 'translate(-200px, 0px)';
 	oneSide.style.transition = 'all 1.0s ease-in-out';
-	oneSide.style.transform = 'translate(-200px, 0px)';
+	//oneSide.style.transform = 'translate(-200px, 0px)';
 	anotherSide.style.transition = 'all 1.0s ease-in-out';
+	oneSide.style.top = '0px';
+	anotherSide.style.top = '0px';
 	oneSide.style.visibility = 'visible';
 	anotherSide.style.visibility = 'visible';
 }
