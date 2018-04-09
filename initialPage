@@ -21,6 +21,19 @@ body {
 	//height: 100%;
 	//border: solid 2px black;
 }
+
+.temporaryStartPicture {
+	width: 100%;
+	//height: 800px;
+	height: 100vh;
+}
+
+//.temporaryStartPicture img {
+	//width: 100%;
+	//height: 100%;
+	//opacity: 1;
+	//object-fit: contain;
+//}
 		
 .mainConfigurationMenu {
 	position: fixed;
@@ -67,8 +80,35 @@ body {
 	border: solid 1px black;
 }
 
+.paperChoice {
+	background-color: #ffffff;
+	background-size: 100% 1.2em;
+	background-image:
+	linear-gradient(90deg, transparent 320px, #abced4 320px, #abced4 322px, transparent 322px),
+	linear-gradient(#eeeeee .1em, transparent .1em);
+	//linear-gradient(90deg, transparent 79px, rgba(171, 206, 212, 1) 79px, rgba(171, 206, 212, 1) 81px, transparent 81px),
+	//linear-gradient(rgba(238, 238, 238, 1) .1em, transparent .1em);
+}
+
 .yellowChoice {
-	background-color: yellow;
+	//background-color: yellow;
+	//background: linear-gradient(#ff8c00, #ffff00);
+	background: repeating-linear-gradient(90deg, transparent, transparent 50px,
+        rgba(255, 127, 0, 0.25) 50px, rgba(255, 127, 0, 0.25) 56px,
+        transparent 56px, transparent 63px,
+        rgba(255, 127, 0, 0.25) 63px, rgba(255, 127, 0, 0.25) 69px,
+        transparent 69px, transparent 116px,
+        rgba(255, 206, 0, 0.25) 116px, rgba(255, 206, 0, 0.25) 166px),
+      repeating-linear-gradient(0deg, transparent, transparent 50px,
+        rgba(255, 127, 0, 0.25) 50px, rgba(255, 127, 0, 0.25) 56px,
+        transparent 56px, transparent 63px,
+        rgba(255, 127, 0, 0.25) 63px, rgba(255, 127, 0, 0.25) 69px,
+        transparent 69px, transparent 116px,
+        rgba(255, 206, 0, 0.25) 116px, rgba(255, 206, 0, 0.25) 166px),
+      repeating-linear-gradient(-45deg, transparent, transparent 5px,
+        rgba(143, 77, 63, 0.25) 5px, rgba(143, 77, 63, 0.25) 10px),
+      repeating-linear-gradient(45deg, transparent, transparent 5px,
+        rgba(143, 77, 63, 0.25) 5px, rgba(143, 77, 63, 0.25) 10px);
 }
 
 .skyblueChoice {
@@ -259,12 +299,12 @@ opacity: 0.9;
     <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/>
     <path d="M0 0h24v24H0z" fill="none"/>
 	</svg></div></div>
-<div class='showHideBackgroundStyleChoice showHideFrontBackgroundStyleChoice' width='50px' height='50px'><div class='yellowChoice'></div><div class='skyblueChoice'></div></div>
+<div class='showHideBackgroundStyleChoice showHideFrontBackgroundStyleChoice' width='50px' height='50px'><div class='paperChoice'></div><div class='yellowChoice'></div><div class='skyblueChoice'></div></div>
 <div class='backgroundStyleChooseDiv'><div>Choose back background style</div><div class='expandBackStyleChoiceSVGWrapDiv'><svg class='expandBackStyleChoice elementsLayingOverFunctionalElements' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
     <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/>
     <path d="M0 0h24v24H0z" fill="none"/>
 	</svg></div></div>
-<div class='showHideBackgroundStyleChoice showHideBackBackgroundStyleChoice' width='50px' height='50px'><div class='yellowChoice'></div><div class='skyblueChoice'></div></div>
+<div class='showHideBackgroundStyleChoice showHideBackBackgroundStyleChoice' width='50px' height='50px'><div class='paperChoice'></div><div class='yellowChoice'></div><div class='skyblueChoice'></div></div>
 </div>
 <div class="newTaskContainer mainContainer">
   <div class="titleBarNewTask">
@@ -288,7 +328,13 @@ opacity: 0.9;
   </div>
 <div style='clear: both' class='newTaskContainerUnderlayingDiv'></div>
 <div class='cardsContainer mainContainer' id='cardsContainer_0'>
-<div class='temporaryStartPicture'></div>
+<div class='temporaryStartPicture'><img src='C:/Users/IrinaK/Documents/dragAndDropCards/Finalize it/BackgroundTempImg/1.png' style='float: left;'>
+<img src='C:/Users/IrinaK/Documents/dragAndDropCards/Finalize it/BackgroundTempImg/2.png' style='float: right;'>
+<div style='clear: both'></div>
+<img src='C:/Users/IrinaK/Documents/dragAndDropCards/Finalize it/BackgroundTempImg/3.png' style='display: block; margin-left: auto; margin-right: auto; top: auto; bottom: auto;'>
+<div style='clear: both'></div>
+<img src='C:/Users/IrinaK/Documents/dragAndDropCards/Finalize it/BackgroundTempImg/4.png' style='display: block; margin-left: auto; margin-right: auto;'>
+<!--<img src='C:/Users/IrinaK/Documents/dragAndDropCards/Finalize it/BackgroundTempImg/tempBackground1.png'>--></div>
   <div style='clear: both' class='cardsContainerStretch'></div>
 </div>
 
@@ -335,6 +381,7 @@ opacity: 0.9;
 	var expandFrontStyleChoiceSVGWrapDivClassName = 'expandFrontStyleChoiceSVGWrapDiv';
 	var backgroundStyleBackChooseDivClassName = 'backgroundStyleBackChooseDiv';
 	var expandBackStyleChoiceSVGWrapDivClassName = 'expandBackStyleChoiceSVGWrapDiv';
+	var temporaryStartPictureClassname = 'temporaryStartPicture';
 	
 	var cardsContainerClassName = 'cardsContainer';
 	var cardsClassName = 'material-card';
@@ -393,12 +440,20 @@ makeCardsCloseable(cards);
 	function makeColorChoicesChangeColor(choices, elementsToChangeColor) {
 		for (var i = 0; i < choices.length; i++) {
 			choices[i].addEventListener('click', function(e) {
+				//var newBackgroundColor = window.getComputedStyle(e.target).getPropertyValue('background-color') || window.getComputedStyle(e.target).getPropertyValue('background');
 				var newBackgroundColor = window.getComputedStyle(e.target).getPropertyValue('background-color');
+				var newBackgroundImage = window.getComputedStyle(e.target).getPropertyValue('background-image');
+				var newBackgroundSize = window.getComputedStyle(e.target).getPropertyValue('background-size');
 				for (var j = 0; j < elementsToChangeColor.length; j++) {
+					elementsToChangeColor[j].style.backgroundColor = 'none';
 					elementsToChangeColor[j].style.backgroundColor = newBackgroundColor;
+					elementsToChangeColor[j].style.backgroundImage = newBackgroundImage;
+					elementsToChangeColor[j].style.backgroundSize = newBackgroundSize;
 					var elementsToChangeColorChildren = elementsToChangeColor[j].childNodes;
 					for (var k = 0; k < elementsToChangeColorChildren.length; k++) {
-						elementsToChangeColorChildren[k].style.backgroundColor = newBackgroundColor; 
+						elementsToChangeColorChildren[k].style.backgroundColor = 'none';
+						elementsToChangeColorChildren[k].style.background = 'none';
+						//elementsToChangeColorChildren[k].style.background = newBackgroundColor; 
 					}
 				}
 			});
@@ -561,11 +616,19 @@ makeCardsCloseable(cards);
 		
 		var taskTextarea = newCardFront.getElementsByClassName(taskTextClassName)[0];
 		var title = newCardFront.getElementsByClassName(titleTextClassName)[0];
-		var startOfFreeArea = parseInt(title.getBoundingClientRect().bottom);
-		var endOfFreeArea = parseInt(newCardArea.childNodes[0].getBoundingClientRect().bottom);
-		//var endOfFreeArea = parseInt(newCardArea.childNodes[0].getBoundingClientRect().bottom) - parseInt(newCardArea.childNodes[0].getBoundingClientRect().top);
+		var startOfFreeArea = parseInt(taskTextarea.getBoundingClientRect().top);
+		var endOfFreeArea = parseInt(newCardFront.getBoundingClientRect().bottom) - parseInt(window.getComputedStyle(newCardFront).getPropertyValue('border-width'));
 		taskTextarea.style.height = parseInt(endOfFreeArea - startOfFreeArea) + 'px';
 		makeTextInputAutoclear(taskTextarea, 'Task');
+		
+		fadeoutStartBackgroundImage();
+	}
+	
+	function fadeoutStartBackgroundImage() {
+		var backgroundImg = document.getElementsByClassName(temporaryStartPictureClassname)[0];
+		backgroundImg.style.transition = 'all 0.7s ease-in-out';
+		backgroundImg.style.opacity = 0;
+		backgroundImg.style.height = '0px';
 	}
 	
 	function configureNewCard(card) {
@@ -672,7 +735,7 @@ function createNewSubtask(e) {
 
 	var newSubtaskInsidesTitle = e.target.parentNode.getElementsByClassName(newSubtaskInsidesTitleClassName)[0];
 	var newSubtaskInsidesTask = e.target.parentNode.getElementsByClassName(newSubtaskInsidesTaskClassName)[0];
-	newCardFront.innerHTML = '<textarea class="'+ titleTextClassName + ' ' + boxSizingItemsClassName + '">' + newSubtaskInsidesTitle.value + '</textarea><p/><textarea class="'+ taskTextClassName + ' ' + boxSizingItemsClassName + '">' + newSubtaskInsidesTask.value + '</textarea>';
+	newCardFront.innerHTML = '<textarea class="'+ titleTextClassName + ' ' + boxSizingItemsClassName + '">' + newSubtaskInsidesTitle.value + '</textarea><textarea class="'+ taskTextClassName + ' ' + boxSizingItemsClassName + '">' + newSubtaskInsidesTask.value + '</textarea>';
 	parentCard.appendChild(newCard);
 	
 	configureNewCard(newCard);
@@ -685,10 +748,10 @@ function createNewSubtask(e) {
 		
 	var taskTextarea = newCardFront.getElementsByClassName(taskTextClassName)[0];
 	var title = newCardFront.getElementsByClassName(titleTextClassName)[0];
-	var startOfFreeArea = parseInt(title.getBoundingClientRect().bottom);
-	var endOfFreeArea = parseInt(newCard.getBoundingClientRect().bottom) - parseInt(newCard.getBoundingClientRect().top);
-	//taskTextarea.style.height = parseInt(endOfFreeArea - startOfFreeArea) + 'px';
-	taskTextarea.style.height = '50%';
+	var startOfFreeArea = parseInt(taskTextarea.getBoundingClientRect().top);
+	var endOfFreeArea = parseInt(newCardFront.getBoundingClientRect().bottom) - parseInt(window.getComputedStyle(newCardFront).getPropertyValue('border-width'));
+	//taskTextarea.style.height = '50%';
+	taskTextarea.style.height = parseInt(endOfFreeArea - startOfFreeArea) + 'px';
 	makeTextInputAutoclear(taskTextarea, 'Task');
 	
 	var subtasksSelect = parentCard.getElementsByClassName(selectSubtasksClassName)[0];
@@ -696,6 +759,7 @@ function createNewSubtask(e) {
 	$(subtasksSelect).append(newOption);
 	
 	writeButtonFunctionsOnButton(newCard);
+	$(subtasksSelect).select2('focus');
 }
 
 function configureSubtasksSelectToReactOnChange(subtasksSelect) {
