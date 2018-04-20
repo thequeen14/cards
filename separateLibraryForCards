@@ -203,7 +203,7 @@ function closeInnerCard(e) {
 		anotherSideToClose = oneSideToClose.previousSibling;
 	}*/
 	
-	if (card.className.inexOf(innerCardsClassName) != -1) {
+	if (card.className.indexOf(innerCardsClassName) != -1) {
 		raiseInnerCardsBeforeAppearance(card);
 		card.style.display = 'none';
 	}
@@ -496,7 +496,7 @@ function createCloseableArea() {
 	//var closeableArea = document.createElement('input');
 		//closeableArea.type = 'button';
 		closeableArea.className = closeableAreaOnCardClassName;
-		closeableArea.style.width = '10%';
+		closeableArea.style.width = '20%';
 		closeableArea.style.height = '20px';
 		closeableArea.style.float = 'right';
 		closeableArea.addEventListener('click', clickOnCloseAreaHandler);
@@ -563,7 +563,7 @@ function makeCardsFlippable(cardsToMakeFlippable){
 function createFlippableArea() {
 	var flippableArea = document.createElement('div');
 		flippableArea.className = flippableAreaOnCardClassName;
-		flippableArea.style.width = '30%';
+		flippableArea.style.width = '40%';
 		flippableArea.style.height = '20px';
 		//flippableArea.style.backgroundColor = 'lightgray';
 		flippableArea.style.float = 'right';
