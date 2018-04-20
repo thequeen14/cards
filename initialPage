@@ -13,27 +13,42 @@
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 		<style>
 html {
-	//height: 100%;
+	height: 100%;
 	//border: solid 2px gray;
 }
 
 body {
 	//height: 100%;
+	bottom: 0;
 	//border: solid 2px black;
+	//background-image:
+	//radial-gradient(ellipse farthest-corner at right bottom, rgb(243, 239, 21) 0%, rgb(0,152, 133) 100%);
+	background-attachment: fixed;
+	background-image:
+	radial-gradient(ellipse farthest-corner at right bottom, rgb(154, 205, 50) 0%, rgb(0,152, 133) 100%);
+}
+
+text:focus {
+	outline: 0;
+}
+
+input:focus {
+	outline: 0;
 }
 
 .temporaryStartPicture {
 	width: 100%;
 	//height: 800px;
-	height: 100vh;
+	bottom: 0;
 }
 
-//.temporaryStartPicture img {
+.temporaryStartPicture img {
 	//width: 100%;
 	//height: 100%;
 	//opacity: 1;
 	//object-fit: contain;
-//}
+	height: auto;
+}
 		
 .mainConfigurationMenu {
 	position: fixed;
@@ -43,7 +58,8 @@ body {
 	//display: none;
 	left: -1000px;
 	//flex-wrap: wrap;
-	background-color: white;
+	//background: linear-gradient(to top, rgb(243, 239, 21) 0%, rgb(0,152, 133) 100%);
+	background: rgb(46, 139, 87);
 	border: 1px solid lightgray;
 	top: 5px;
 	bottom: 5px;
@@ -58,6 +74,7 @@ body {
 
 .backgroundStyleChooseDiv {
 	display: flex;
+	color: #ffffff;
 	//width: 100%;
 	right: 0;
 	left: 0;
@@ -78,6 +95,10 @@ body {
 	height: 20px;
 	margin: 3px 3px 3px 3px;
 	border: solid 1px black;
+}
+
+.showHideBackgroundStyleChoice .currentChoice{
+	border: solid 3px black;
 }
 
 .paperChoice {
@@ -114,11 +135,16 @@ body {
 .skyblueChoice {
 	background-color: skyblue;
 }
+
+.whiteChoice {
+	background-color: rgb(255, 255, 240);
+}
 		
 .cardsContainer {
   display: flex;
   width: 100%;
-  height: 100%;
+  //height: 100%;
+  bottom: 0;
   flex-wrap: wrap;
 }
 
@@ -130,7 +156,7 @@ body {
 .material-card {
   display: flex;
   //border: 2px solid black;
-  margin: 10px 10px 10px 10px;
+  margin: 20px 20px 20px 20px;
   width: 400px;
   height: 400px;
   justify-content: center;
@@ -149,14 +175,28 @@ body {
 }
 
 .front {
-background-color: skyblue;
-opacity: 0.9;
+background-color: rgb(255, 255, 240);
+//opacity: 0.9;
   z-index: 2;
 }
 
+.front:after {
+	content: "";
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	border-width: 0 0 40px 40px;
+	//border-top-style: solid;
+	//border-right-style: none;
+	//border-left-color: rgb(250, 235, 215);
+	//border-top-color: transparent;
+	border-style: solid;
+	border-color: #fff rgb(250, 235, 215);
+}
+
 .back {
-background-color: lightgreen;
-opacity: 0.9;
+background-color: rgb(255, 255, 240);
+//opacity: 0.9;
   transform: rotateY(180deg);
 }
 
@@ -170,6 +210,8 @@ opacity: 0.9;
 .newTaskContainerUnderlayingDiv {
 	position: static;
 	height: 100px;
+	background: none;
+	margin-bottom: 10px;
 }
 
 .newTaskContainer {
@@ -178,16 +220,20 @@ opacity: 0.9;
 	//width: 100vw;
 	position: fixed;
 	z-index: 1500;
-	background-color: #ffffff;
-	right: 5px;
-	left: 5px;
-	margin: 0 5px 0 5px;
+	//background-color: #ffffff;
+	//right: 5px;
+	//left: 5px;
+	right: 0px;
+	left: 0px;
+	//margin: 0 5px 0 5px;
+	margin: 0 0 0 0;
 }
 
 .titleBarNewTask {
 	width: 100%;
 	height: 50px;
-	background: lightgray;
+	//background: lightgray;
+	background: rgba(0,0,0, 0.5);
 	padding: 3px;
 }
 
@@ -196,7 +242,8 @@ opacity: 0.9;
 	height: 50%;
 	margin: 10px 10px 10px 10px;
 	font-weight: bold;
-	color: darkslategray;
+	color: #ffffff;
+	//color: darkslategray;
 }
 
 .expandButtonSVG {
@@ -211,6 +258,7 @@ opacity: 0.9;
 
 .barNewTaskInsidesTitle {
 	width: 40%;
+	margin-left: 5px;
 }
 
 .barNewTaskInsidesTask {
@@ -222,13 +270,26 @@ opacity: 0.9;
 	padding: 3px;
 	font-family: sans serif;
 	font-size: 100%;
-	color: slategray;
+	color: #ffffff;
+	background: none;
+	//border-style: none;
+	border-top-style: none;
+	border-left-style: none;
+	border-right-style: none;
+	border-bottom-style: 2px solid #ffffff;
+	margin-right: 10px;
+	padding-left: 4px;
 }
 
 .addNewTaskButton {
 	font-weight: bold;
-	color: darkslategray;
+	//color: darkslategray;
+	background-color: rgb(34, 139, 34);
+	border: 1px solid rgb(34, 139, 34);
+	//border-radius: 15px;
+	color: #ffffff;
 	width: 10%;
+	margin-right: 5px;
 }
 
 .titleText, .taskText {
@@ -238,15 +299,16 @@ opacity: 0.9;
 	resize: none;
 	font-family: serif;
 	font-size: 100%;
+	padding-left: 10px;
 }
 
 .titleText {
-	background-color: skyblue;
+	background-color: rgb(255, 255, 240);
 	font-weight: bold;
 }
 
 .taskText {
-	background-color: skyblue;
+	background-color: rgb(255, 255, 240);
 }
 
 .addNewSubtaskButton {
@@ -264,7 +326,7 @@ opacity: 0.9;
 
 .elementsLayingOverFunctionalElements {
 	pointer-events: none;
-	fill: darkslategray;
+	//fill: darkslategray;
 }
 
 .boxsizingBorder {
@@ -273,11 +335,8 @@ opacity: 0.9;
             box-sizing: border-box;
 }
 
-.draggableAreaOnCard, .flippableAreaOnCard, .closeableAreaOnCard{
-	margin-bottom: 5px;
-}
-
-.draggableAreaOnCard, .flippableAreaOnCard {
+.draggableAreaOnCard, .flippableAreaOnCard, .closeableAreaOnCard {
+	margin-bottom: 10px;
 	display: flex;
 	justify-content: center;
 }
@@ -287,58 +346,69 @@ opacity: 0.9;
 	float: left;
 	margin: 10px 10px 10px 10px;
 }
+
+.lowestBackground {
+	background-attachment: fixed;
+	background-image:
+	radial-gradient(ellipse farthest-corner at right bottom, rgb(243, 239, 21) 0%, rgb(0,152, 133) 100%);
+	z-index: -1;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	top: 0;
+}
 		</style>
 	</head>
     <body>
-<div class='mainConfigurationMenu'><div class='closeMainConfigurationMenu'><svg class='hideMainConfigurationMenu elementsLayingOverFunctionalElements' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<!--<div class='lowestBackground'>-->
+<div class='mainConfigurationMenu'><div class='closeMainConfigurationMenu'><svg class='hideMainConfigurationMenu elementsLayingOverFunctionalElements' fill="#ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
     <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
     <path d="M0 0h24v24H0z" fill="none"/>
 </svg></div>
 <div style='clear: both' class='mainConfigurationMenuStretch'></div>
-<div class='backgroundStyleChooseDiv'><div>Choose front background style</div><div class='expandFrontStyleChoiceSVGWrapDiv'><svg class='expandFrontStyleChoice elementsLayingOverFunctionalElements' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<div class='backgroundStyleChooseDiv'><div>Choose front background style</div><div class='expandFrontStyleChoiceSVGWrapDiv'><svg class='expandFrontStyleChoice elementsLayingOverFunctionalElements' fill="#ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
     <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/>
     <path d="M0 0h24v24H0z" fill="none"/>
 	</svg></div></div>
-<div class='showHideBackgroundStyleChoice showHideFrontBackgroundStyleChoice' width='50px' height='50px'><div class='paperChoice'></div><div class='yellowChoice'></div><div class='skyblueChoice'></div></div>
-<div class='backgroundStyleChooseDiv'><div>Choose back background style</div><div class='expandBackStyleChoiceSVGWrapDiv'><svg class='expandBackStyleChoice elementsLayingOverFunctionalElements' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<div class='showHideBackgroundStyleChoice showHideFrontBackgroundStyleChoice' width='50px' height='50px'><div class='paperChoice'></div><div class='yellowChoice'></div><div class='skyblueChoice'></div><div class='whiteChoice currentChoice'></div></div>
+<div class='backgroundStyleChooseDiv'><div>Choose back background style</div><div class='expandBackStyleChoiceSVGWrapDiv'><svg class='expandBackStyleChoice elementsLayingOverFunctionalElements' fill="#ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
     <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/>
     <path d="M0 0h24v24H0z" fill="none"/>
 	</svg></div></div>
-<div class='showHideBackgroundStyleChoice showHideBackBackgroundStyleChoice' width='50px' height='50px'><div class='paperChoice'></div><div class='yellowChoice'></div><div class='skyblueChoice'></div></div>
+<div class='showHideBackgroundStyleChoice showHideBackBackgroundStyleChoice' width='50px' height='50px'><div class='paperChoice'></div><div class='yellowChoice'></div><div class='skyblueChoice'></div><div class='whiteChoice currentChoice'></div></div>
 </div>
 <div class="newTaskContainer mainContainer">
   <div class="titleBarNewTask">
-  <div class='showMenuWithConfigurationButton'><svg class='showMenuWithConfigurationButtonSVG elementsLayingOverFunctionalElements' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+  <div class='showMenuWithConfigurationButton'><svg class='showMenuWithConfigurationButtonSVG elementsLayingOverFunctionalElements' fill="#ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
     <path d="M0 0h24v24H0z" fill="none"/>
     <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
 </svg></div>
   <label class="newTaskLabel">New Task</label>
-  <div class='expandButtonSVG'><svg class='hideShowBarNewTask' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+  <div class='expandButtonSVG'><svg class='hideShowBarNewTask' fill="#ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
     <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/>
     <path d="M0 0h24v24H0z" fill="none"/>
 	</svg></div>
   <!--<label class="newTaskLabel">New Task</label><input type='button' class='hideShowBarNewTask' value='+'/>-->
   </div>
   <div class='barNewTaskInsides'> 
-  <input type='text' class='barNewTaskInsidesTitle' name='Title' value='Title'/>
+  <input type='text' class='barNewTaskInsidesTitle' name='Title' value='Write title for you task here'/>
   <!--<select class = 'select2' name='cards' multiple='multiple'></select>-->
-  <input type='text' class='barNewTaskInsidesTask' name='Task' value='Task'/>
-  <input type='button' class='addNewTaskButton' value='Add'/>
+  <input type='text' class='barNewTaskInsidesTask' name='Task' value='Write description of your task here'/>
+  <input type='button' class='addNewTaskButton' value='ADD'/>
   </div>
   </div>
 <div style='clear: both' class='newTaskContainerUnderlayingDiv'></div>
 <div class='cardsContainer mainContainer' id='cardsContainer_0'>
-<div class='temporaryStartPicture'><img src='C:/Users/IrinaK/Documents/dragAndDropCards/Finalize it/BackgroundTempImg/1.png' style='float: left;'>
-<img src='C:/Users/IrinaK/Documents/dragAndDropCards/Finalize it/BackgroundTempImg/2.png' style='float: right;'>
+<div class='temporaryStartPicture'><img src='C:/Users/IrinaK/Documents/dragAndDropCards/Finalize it/BackgroundTempImg/1New.png' style='float: left;'>
+<img src='C:/Users/IrinaK/Documents/dragAndDropCards/Finalize it/BackgroundTempImg/2New.png' style='float: right;'>
 <div style='clear: both'></div>
-<img src='C:/Users/IrinaK/Documents/dragAndDropCards/Finalize it/BackgroundTempImg/3.png' style='display: block; margin-left: auto; margin-right: auto; top: auto; bottom: auto;'>
+<img src='C:/Users/IrinaK/Documents/dragAndDropCards/Finalize it/BackgroundTempImg/3New.png' style='display: block; margin-left: auto; margin-right: auto; top: auto; bottom: auto;'>
 <div style='clear: both'></div>
-<img src='C:/Users/IrinaK/Documents/dragAndDropCards/Finalize it/BackgroundTempImg/4.png' style='display: block; margin-left: auto; margin-right: auto;'>
+<img src='C:/Users/IrinaK/Documents/dragAndDropCards/Finalize it/BackgroundTempImg/4New.png' style='display: block; margin-left: auto; margin-right: auto;'>
 <!--<img src='C:/Users/IrinaK/Documents/dragAndDropCards/Finalize it/BackgroundTempImg/tempBackground1.png'>--></div>
   <div style='clear: both' class='cardsContainerStretch'></div>
 </div>
-
-<br>
+<!--</div>-->
 <script src="cardsLib.js"></script>
 <script>
 	var newTaskContainerClassName = 'newTaskContainer';
@@ -363,8 +433,8 @@ opacity: 0.9;
 	var elementsLayingOverFunctionalElementsClassName = 'elementsLayingOverFunctionalElements';
 	var addNewSubtaskButtonSVGClassName = 'addNewSubtaskButtonSVG';
 	var expandButtonSVGWrappingDivClassName = 'expandButtonSVG';
-	var innerHTMLForExpandLessSVG = '<svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'
-	var innerHTMLForExpandMoreSVG = '<svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'
+	var innerHTMLForExpandLessSVG = '<svg fill="#ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'
+	var innerHTMLForExpandMoreSVG = '<svg fill="#ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'
 	//var innerHTMLForExpandLessSVG = '<svg class=\'' + hideShowBarNewTaskClassName + '\' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'
 	//var innerHTMLForExpandMoreSVG = '<svg class=\'' + hideShowBarNewTaskClassName + '\' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'
 	//var innerHTMLForExpandLessSVG = '<svg class=\'' + hideShowBarNewTaskClassName + ' ' + elementsLayingOverFunctionalElementsClassName + '\' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'
@@ -375,13 +445,22 @@ opacity: 0.9;
 	var innerHTMLForCloseArea = '<svg class=\'' + elementsLayingOverFunctionalElementsClassName + '\' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'
 	var innerHTMLForCheckArea = '<svg class=\'' + elementsLayingOverFunctionalElementsClassName + '\' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>'
 	var innerHTMLForAddArea = '<svg class=\'' + addNewSubtaskButtonSVGClassName + ' ' + elementsLayingOverFunctionalElementsClassName + '\' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>'
+	var checkboxOutlineClassName = 'checkboxOutline';
+	var checkboxOutline = '<svg class=\'' + elementsLayingOverFunctionalElementsClassName + ' ' + checkboxOutlineClassName + '\' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/><path d="M0 0h24v24H0z" fill="none"/></svg>';
+	var checkboxFilledClassName = 'checkboxFilled';
+	var checkboxFilled = '<svg class=\'' + elementsLayingOverFunctionalElementsClassName + ' ' + checkboxFilledClassName + '\' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>';
 	var mainContainersClassName = 'mainContainer';
 	var keyForMainContainersOpacityFromSessionStorage = 'mainContainersOpacity';
 	var backgroundStyleFrontChooseDivClassName = 'backgroundStyleFrontChooseDiv';
 	var expandFrontStyleChoiceSVGWrapDivClassName = 'expandFrontStyleChoiceSVGWrapDiv';
 	var backgroundStyleBackChooseDivClassName = 'backgroundStyleBackChooseDiv';
 	var expandBackStyleChoiceSVGWrapDivClassName = 'expandBackStyleChoiceSVGWrapDiv';
-	var temporaryStartPictureClassname = 'temporaryStartPicture';
+	var temporaryStartPictureClassName = 'temporaryStartPicture';
+	var newTaskContainerUnderlayingDivClassName = 'newTaskContainerUnderlayingDiv';
+	var currentBackgroundChoiceForCardsClassName = 'currentChoice';
+	var showSubtasksDivClassName = 'showSubtasksDiv';
+	var newSubtaskPanelClassName = 'newSubtaskPanel';
+	var newSubtaskPanelTaskTitleClassName = 'newSubtaskPanelTaskTitle';
 	
 	var cardsContainerClassName = 'cardsContainer';
 	var cardsClassName = 'material-card';
@@ -401,8 +480,8 @@ window.addEventListener('DOMContentLoaded', onLoadHandler);
 $(document).ready(initializeSelectDropdownForCards);
 initializeOptionsForCardsDropdown();
 makeCardsCheckable(cards);
-makeCardsDraggable(cards);
 makeCardsFlippable(cards);
+makeCardsDraggable(cards);
 makeCardsFlippable(innerCards);
 makeCardsCloseable(cards);
 //$(cardsContainer).on('DOMNodeInserted', handleNewCardAppearance);
@@ -435,15 +514,39 @@ makeCardsCloseable(cards);
 		var contentToShowOnClickNewTask = document.getElementsByClassName(barNewTaskInsidesClassName)[0];
 		var expandButtonSVGWrappingDivNewTask = document.getElementsByClassName(expandButtonSVGWrappingDivClassName)[0];
 		makeExpandMoreLessButtonReactOnClick(expandButtonSVGWrappingDivNewTask, contentToShowOnClickNewTask);
+		
+		var temporaryStartPicture = document.getElementsByClassName(temporaryStartPictureClassName)[0];
+		var newTaskContainerUnderlayingDiv = document.getElementsByClassName(newTaskContainerUnderlayingDivClassName)[0];
+		var newTaskContainer = document.getElementsByClassName(newTaskContainerClassName)[0];
+		var barNewTaskInsides = document.getElementsByClassName(barNewTaskInsidesClassName)[0];
+		var mainConfigurationMenu = document.getElementsByClassName(mainConfigurationMenuClassName)[0];
+		if (!mainConfigurationMenu.style.display || mainConfigurationMenu.style.display == 'none') {
+			newTaskContainerUnderlayingDiv.style.height = parseInt(window.getComputedStyle(newTaskContainer).getPropertyValue('height')) + 'px';
+		}
+		else {
+			newTaskContainerUnderlayingDiv.style.height = (parseInt(window.getComputedStyle(newTaskContainer).getPropertyValue('height')) + parseInt(window.getComputedStyle(barNewTaskInsides).getPropertyValue('height'))) + 'px';
+		}
+		/*newTaskContainerUnderlayingDiv.style.height = window.getComputedStyle(newTaskContainer).getPropertyValue('height');
+		var currentHeight = window.getComputedStyle(temporaryStartPicture).getPropertyValue('height');
+		var underlayingDivHeight = window.getComputedStyle(newTaskContainerUnderlayingDiv).getPropertyValue('height');
+		temporaryStartPicture.style.height = currentHeight - underlayingDivHeight;*/
 	}
 	
 	function makeColorChoicesChangeColor(choices, elementsToChangeColor) {
 		for (var i = 0; i < choices.length; i++) {
-			choices[i].addEventListener('click', function(e) {
-				//var newBackgroundColor = window.getComputedStyle(e.target).getPropertyValue('background-color') || window.getComputedStyle(e.target).getPropertyValue('background');
-				var newBackgroundColor = window.getComputedStyle(e.target).getPropertyValue('background-color');
-				var newBackgroundImage = window.getComputedStyle(e.target).getPropertyValue('background-image');
-				var newBackgroundSize = window.getComputedStyle(e.target).getPropertyValue('background-size');
+			choices[i].addEventListener('click', {handleEvent: changeCardsColorsToCurrentColorChoiceInEvent, choice: choices[i], elementsToChangeColor: elementsToChangeColor});
+		}
+	}
+	
+	function changeCardsColorsToCurrentColorChoiceInEvent(e) {
+		changeCardsColorsToCurrentColorChoice(this.choice, this.elementsToChangeColor);		
+	}
+	
+	function changeCardsColorsToCurrentColorChoice(choice, elementsToChangeColor) {
+		//var newBackgroundColor = window.getComputedStyle(e.target).getPropertyValue('background-color') || window.getComputedStyle(e.target).getPropertyValue('background');
+		var newBackgroundColor = window.getComputedStyle(choice).getPropertyValue('background-color');
+				var newBackgroundImage = window.getComputedStyle(choice).getPropertyValue('background-image');
+				var newBackgroundSize = window.getComputedStyle(choice).getPropertyValue('background-size');
 				for (var j = 0; j < elementsToChangeColor.length; j++) {
 					elementsToChangeColor[j].style.backgroundColor = 'none';
 					elementsToChangeColor[j].style.backgroundColor = newBackgroundColor;
@@ -456,8 +559,9 @@ makeCardsCloseable(cards);
 						//elementsToChangeColorChildren[k].style.background = newBackgroundColor; 
 					}
 				}
-			});
-		}
+				var previousColorChoice = choice.parentNode.getElementsByClassName(currentBackgroundChoiceForCardsClassName)[0];
+				previousColorChoice.className = previousColorChoice.className.replace(currentBackgroundChoiceForCardsClassName, '');
+				choice.className = choice.className + ' ' + currentBackgroundChoiceForCardsClassName;
 	}
 	
 	/*function makeColorChoicesChangeColor(choices, elementsToChangeColor) {
@@ -505,6 +609,7 @@ makeCardsCloseable(cards);
 			var mainContainers = document.getElementsByClassName(mainContainersClassName);
 			saveMainContainersOpacityToSessionStorage();
 			makeSecondaryElementsMoreTransparent(mainContainers);
+			makeClickOutOfMainMenuAreaCloseIt(mainContainers);
 		}
 	}
 	
@@ -512,6 +617,12 @@ makeCardsCloseable(cards);
 		for (var i = 0; i < secondaryElements.length; i++) {
 				secondaryElements[i].style.opacity = '0.5';
 			}
+	}
+	
+	function makeClickOutOfMainMenuAreaCloseIt(areasOutOfMainMenu) {
+		for (var i = 0; i < areasOutOfMainMenu.length; i++) {
+			areasOutOfMainMenu[i].addEventListener('click', hideMenuDivClickHandler);
+		}
 	}
 	
 	function saveMainContainersOpacityToSessionStorage() {
@@ -546,6 +657,10 @@ makeCardsCloseable(cards);
 			mainMenu.style.transition = 'all 1.0s ease';
 			mainMenu.style.left = '-1000px';
 			setSavedMainContainersOpacityFromSessionStorage();
+			var mainContainers = document.getElementsByClassName(mainContainersClassName);
+			for (var i = 0; i < mainContainers.length; i++) {
+				mainContainers[i].removeEventListener('click', hideMenuDivClickHandler);
+			}
 		}
 		/*if (mainMenu.style.display == 'flex') {
 			mainMenu.style.transform = 'translate(0, -' + mainMenu.offsetWidth + ')';
@@ -582,13 +697,18 @@ makeCardsCloseable(cards);
 	}
 	
 	function showHideExpandingContent(btnHideShowSVGWrappingDiv, contentToShowOnClick) {
+		var newTaskContainerUnderlayingDiv = document.getElementsByClassName(newTaskContainerUnderlayingDivClassName)[0];
+		var newTaskContainer = document.getElementsByClassName(newTaskContainerClassName)[0];
+		var barNewTaskInsides = document.getElementsByClassName(barNewTaskInsidesClassName)[0];
 		if (!contentToShowOnClick.style.display || contentToShowOnClick.style.display == 'none') {
 			contentToShowOnClick.style.display = 'flex';
 			btnHideShowSVGWrappingDiv.innerHTML = innerHTMLForExpandLessSVG;
+			newTaskContainerUnderlayingDiv.style.height = (parseInt(window.getComputedStyle(newTaskContainer).getPropertyValue('height')) + parseInt(window.getComputedStyle(barNewTaskInsides).getPropertyValue('height'))) + 'px';
 		}
 		else {
 			contentToShowOnClick.style.display = 'none';
 			btnHideShowSVGWrappingDiv.innerHTML = innerHTMLForExpandMoreSVG;
+			newTaskContainerUnderlayingDiv.style.height = parseInt(window.getComputedStyle(newTaskContainer).getPropertyValue('height')) + 'px';
 		}
 	}
 	
@@ -601,6 +721,7 @@ makeCardsCloseable(cards);
 		var cardsContainer = document.getElementsByClassName(cardsContainerClassName)[0];
 		var newCardArea = createNewMaterialCard(cardsContainer, cardsClassName);
 		newCardFront = newCardArea.getElementsByClassName(cardFrontClassName)[0];
+		newCardBack = newCardArea.getElementsByClassName(cardBackClassName)[0];
 
 		var barNewTaskInsidesTitle = document.getElementsByClassName(barNewTaskInsidesTitleClassName)[0];
 		var barNewTaskInsidesTask = document.getElementsByClassName(barNewTaskInsidesTaskClassName)[0];
@@ -612,20 +733,26 @@ makeCardsCloseable(cards);
 		addSubtaskConfigurationAbility(newCardArea.childNodes[0]);
 		
 		var titleTextarea = newCardFront.getElementsByClassName(titleTextClassName)[0];
-		makeTextInputAutoclear(titleTextarea, 'Title');
+		makeTextInputAutoclear(titleTextarea, 'Write title for you task here');
 		
 		var taskTextarea = newCardFront.getElementsByClassName(taskTextClassName)[0];
 		var title = newCardFront.getElementsByClassName(titleTextClassName)[0];
 		var startOfFreeArea = parseInt(taskTextarea.getBoundingClientRect().top);
 		var endOfFreeArea = parseInt(newCardFront.getBoundingClientRect().bottom) - parseInt(window.getComputedStyle(newCardFront).getPropertyValue('border-width'));
 		taskTextarea.style.height = parseInt(endOfFreeArea - startOfFreeArea) + 'px';
-		makeTextInputAutoclear(taskTextarea, 'Task');
+		makeTextInputAutoclear(taskTextarea, 'Write description of your task here');
 		
 		fadeoutStartBackgroundImage();
+		var frontChoice = document.getElementsByClassName(showHideFrontBackgroundStyleChoiceClassName)[0].getElementsByClassName(currentBackgroundChoiceForCardsClassName)[0];
+		var backChoice = document.getElementsByClassName(showHideBackBackgroundStyleChoiceClassName)[0].getElementsByClassName(currentBackgroundChoiceForCardsClassName)[0];
+		var cardFrontToArray = [newCardFront];
+		var cardBackToArray = [newCardBack];
+		changeCardsColorsToCurrentColorChoice(frontChoice, cardFrontToArray);
+		changeCardsColorsToCurrentColorChoice(backChoice, cardBackToArray);
 	}
 	
 	function fadeoutStartBackgroundImage() {
-		var backgroundImg = document.getElementsByClassName(temporaryStartPictureClassname)[0];
+		var backgroundImg = document.getElementsByClassName(temporaryStartPictureClassName)[0];
 		backgroundImg.style.transition = 'all 0.7s ease-in-out';
 		backgroundImg.style.opacity = 0;
 		backgroundImg.style.height = '0px';
@@ -636,10 +763,10 @@ makeCardsCloseable(cards);
 	var cardToArray = [];
 	cardToArray.push(card);
 	//makeCardsCheckable(cardToArray);
+	makeCardsFlippable(cardToArray);
 	if (card.className.indexOf(cardsClassName) != -1) {
 		makeCardsDraggable(cardToArray);
 	}
-	makeCardsFlippable(cardToArray);
 	makeCardsCloseable(cardToArray);
 	cards = document.getElementsByClassName(cardsClassName);
 	configureCardAreasWidth();
@@ -656,12 +783,25 @@ function writeButtonFunctionsOnButton(card) {
 	backFlip.innerHTML = innerHTMLForSubtasksBackToMainTask;
 	frontClose.innerHTML = innerHTMLForCloseArea;
 	backClose.innerHTML = innerHTMLForCloseArea;
+	frontFlip.style.marginTop = '5px';
+	backFlip.style.marginTop = '5px';
+	frontClose.style.marginTop = '5px';
+	backClose.style.marginTop = '5px';
+	frontFlip.title = 'Flip';
+	backFlip.title = 'Flip';
+	frontClose.title = 'Delete';
+	backClose.title = 'Delete';
+	
 	
 	if (card.className.indexOf(cardsClassName) != -1) {
 		var frontDrag = front.getElementsByClassName(draggableAreaOnCardClassName)[0];
 		var backDrag = back.getElementsByClassName(draggableAreaOnCardClassName)[0];
 		frontDrag.innerHTML = innerHTMLForShuffleCards;
 		backDrag.innerHTML = innerHTMLForShuffleCards;
+		frontDrag.style.marginTop = '5px';
+		backDrag.style.marginTop = '5px';
+		frontDrag.title = 'Drag';
+		backDrag.title = 'Drag';
 	}
 }
 
@@ -686,11 +826,20 @@ function addSubtaskConfigurationAbility(card) {
 	var newOption = new Option();
 	$(chooseSubtaskSelect).append(newOption); //for the placeholder to show when no option is chosen
 	configureSubtasksSelectToReactOnChange(chooseSubtaskSelect);
+	
+	var showSubtasksDiv = document.createElement('div');
+	showSubtasksDiv.className = showSubtasksDivClassName + ' ' + boxSizingItemsClassName;
+	showSubtasksDiv.innerHTML = 'No tasks here yet!';
+	showSubtasksDiv.style.padding = '0px 5px 0px 5px';
+	showSubtasksDiv.style.width = '100%';
+	showSubtasksDiv.style.height = '70%';
+	showSubtasksDiv.style.overflowY = 'auto';
+	back.appendChild(showSubtasksDiv);
 		
 	var labelAddNewSubtask = document.createElement('label');
 	labelAddNewSubtask.innerHTML = 'Add new subtask: ';
 	back.appendChild(labelAddNewSubtask);
-	labelAddNewSubtask.style.display = 'block';
+	labelAddNewSubtask.style.display = 'inline-block';
 	//labelAddNewSubtask.style.width = '100%';
 	labelAddNewSubtask.style.left = '0';
 	labelAddNewSubtask.style.right = '0';
@@ -699,21 +848,23 @@ function addSubtaskConfigurationAbility(card) {
 	labelAddNewSubtask.style.marginLeft = '5px';
 		
 	var titleOfNewSubtask = document.createElement('textarea');
-	titleOfNewSubtask.value = 'Title';
+	titleOfNewSubtask.value = 'Write title for you task here';
 	titleOfNewSubtask.className = newSubtaskInsidesTitleClassName + ' ' + titleTextClassName + ' ' + boxSizingItemsClassName;
 	titleOfNewSubtask.style.width = '100%';
-	titleOfNewSubtask.style.background = 'paleGreen';
-	makeTextInputAutoclear(titleOfNewSubtask, 'Title');
+	titleOfNewSubtask.style.backgroundColor = 'rgb(255, 255, 240)';
+	makeTextInputAutoclear(titleOfNewSubtask, 'Write title for you task here');
 	back.appendChild(titleOfNewSubtask);
+	titleOfNewSubtask.style.display = 'none';
 		
 	var taskOfNewSubtask = document.createElement('textarea');
-	taskOfNewSubtask.value = 'Task';
+	taskOfNewSubtask.value = 'Write description of your task here';
 	taskOfNewSubtask.className = newSubtaskInsidesTaskClassName + ' ' + taskTextClassName + ' ' + boxSizingItemsClassName;
 	taskOfNewSubtask.style.width = '100%';
 	taskOfNewSubtask.style.height = '50%';
-	taskOfNewSubtask.style.background = 'paleGreen';
-	makeTextInputAutoclear(taskOfNewSubtask, 'Task');
+	taskOfNewSubtask.style.backgroundColor = 'rgb(255, 255, 240)';
+	makeTextInputAutoclear(taskOfNewSubtask, 'Write description of your task here');
 	back.appendChild(taskOfNewSubtask);
+	taskOfNewSubtask.style.display = 'none';
 		
 	var addButtonForNewSubtask = document.createElement('div');
 	//addButtonForNewSubtask.type = 'button';
@@ -732,6 +883,7 @@ function createNewSubtask(e) {
 	var parentCard = e.target.parentNode.parentNode;
 	var newCard = createNewMaterialCard(parentCard, innerCardsClassName);
 	newCardFront = newCard.getElementsByClassName(cardFrontClassName)[0];
+	newCardBack = newCard.getElementsByClassName(cardBackClassName)[0];
 
 	var newSubtaskInsidesTitle = e.target.parentNode.getElementsByClassName(newSubtaskInsidesTitleClassName)[0];
 	var newSubtaskInsidesTask = e.target.parentNode.getElementsByClassName(newSubtaskInsidesTaskClassName)[0];
@@ -744,7 +896,8 @@ function createNewSubtask(e) {
 	raiseInnerCardsBeforeAppearance(newCard);
 	
 	var titleTextarea = newCardFront.getElementsByClassName(titleTextClassName)[0];
-	makeTextInputAutoclear(titleTextarea, 'Title');
+	makeTextInputAutoclear(titleTextarea, 'Write title for you task here');
+	titleTextarea.addEventListener('focusout', titleTextareaSubtaskClickHandler);
 		
 	var taskTextarea = newCardFront.getElementsByClassName(taskTextClassName)[0];
 	var title = newCardFront.getElementsByClassName(titleTextClassName)[0];
@@ -752,7 +905,7 @@ function createNewSubtask(e) {
 	var endOfFreeArea = parseInt(newCardFront.getBoundingClientRect().bottom) - parseInt(window.getComputedStyle(newCardFront).getPropertyValue('border-width'));
 	//taskTextarea.style.height = '50%';
 	taskTextarea.style.height = parseInt(endOfFreeArea - startOfFreeArea) + 'px';
-	makeTextInputAutoclear(taskTextarea, 'Task');
+	makeTextInputAutoclear(taskTextarea, 'Write description of your task here');
 	
 	var subtasksSelect = parentCard.getElementsByClassName(selectSubtasksClassName)[0];
 	var newOption = new Option(newSubtaskInsidesTitle.value, parentCard.getElementsByClassName(innerCardsClassName).length);
@@ -760,6 +913,62 @@ function createNewSubtask(e) {
 	
 	writeButtonFunctionsOnButton(newCard);
 	$(subtasksSelect).select2('focus');
+	
+	var frontChoice = document.getElementsByClassName(showHideFrontBackgroundStyleChoiceClassName)[0].getElementsByClassName(currentBackgroundChoiceForCardsClassName)[0];
+	var backChoice = document.getElementsByClassName(showHideBackBackgroundStyleChoiceClassName)[0].getElementsByClassName(currentBackgroundChoiceForCardsClassName)[0];
+	var cardFrontToArray = [newCardFront];
+	var cardBackToArray = [newCardBack];
+	changeCardsColorsToCurrentColorChoice(frontChoice, cardFrontToArray);
+	changeCardsColorsToCurrentColorChoice(backChoice, cardBackToArray);
+	
+	var showSubtasksDiv = e.target.parentNode.getElementsByClassName(showSubtasksDivClassName)[0];
+	var newSubtaskPanel = document.createElement('div');
+	newSubtaskPanel.className = newSubtaskPanelClassName;
+	var newSubtaskPanelTaskTitle = document.createElement('div');
+	newSubtaskPanelTaskTitle.className = newSubtaskPanelTaskTitleClassName;
+	newSubtaskPanelTaskTitle.innerHTML = newSubtaskInsidesTitle.value;
+	newSubtaskPanelTaskTitle.style.display = 'inline-block';
+	newSubtaskPanel.appendChild(newSubtaskPanelTaskTitle);
+	var taskDoneCheckbox = document.createElement('div');
+	taskDoneCheckbox.innerHTML = checkboxOutline;
+	taskDoneCheckbox.style.display = 'inline-block';
+	taskDoneCheckbox.addEventListener('click', taskDoneCheckboxClickHandler);
+	newSubtaskPanel.appendChild(taskDoneCheckbox);
+	newSubtaskPanel.style.display = 'flex';
+	newSubtaskPanel.style.justifyContent = 'space-between';
+	showSubtasksDiv.appendChild(newSubtaskPanel);
+}
+
+function titleTextareaSubtaskClickHandler(e) {
+	var newTitle = e.target.value;
+	var parentMaterialCard = e.target.parentNode.parentNode.parentNode;
+	var parentCard = parentMaterialCard.getElementsByClassName(cardBackClassName)[0];
+	var currentCard = e.target.parentNode;
+	var otherInnerCards = parentMaterialCard.getElementsByClassName(innerCardsClassName);
+	var currentCardIndex = -1;
+	for (var i = 0; i < otherInnerCards.length; i++) {
+		var innerCardFront = otherInnerCards[i].getElementsByClassName(cardFrontClassName)[0];
+		if (parseInt(window.getComputedStyle(innerCardFront).getPropertyValue('top')) == 0) {
+			currentCardIndex = i;
+			break;
+		}
+	}
+	console.log(currentCardIndex);
+	var select2ForCurrentCard = parentCard.getElementsByClassName(selectSubtasksClassName)[0];
+	var showSubtasksDiv = parentCard.getElementsByClassName(showSubtasksDivClassName)[0];
+	var subtaskPanel = showSubtasksDiv.getElementsByClassName(newSubtaskPanelClassName)[currentCardIndex];
+	var subtaskPanelTitleText = subtaskPanel.getElementsByClassName(newSubtaskPanelTaskTitleClassName)[0];
+	subtaskPanelTitleText.innerHTML = newTitle;
+}
+
+function taskDoneCheckboxClickHandler(e) {
+	var checkboxOutlineCollection = e.target.getElementsByClassName(checkboxOutlineClassName);
+	if (checkboxOutlineCollection.length != 0) {
+		e.target.innerHTML = checkboxFilled;
+	}
+	else {
+		e.target.innerHTML = checkboxOutline;
+	}
 }
 
 function configureSubtasksSelectToReactOnChange(subtasksSelect) {
