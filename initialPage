@@ -59,7 +59,8 @@ input:focus {
 	left: -1000px;
 	//flex-wrap: wrap;
 	//background: linear-gradient(to top, rgb(243, 239, 21) 0%, rgb(0,152, 133) 100%);
-	background: rgb(46, 139, 87);
+	background: rgb(17, 81, 57);
+	//background: rgb(46, 139, 87);
 	border: 1px solid lightgray;
 	top: 5px;
 	bottom: 5px;
@@ -335,7 +336,7 @@ background-color: rgb(255, 255, 240);
             box-sizing: border-box;
 }
 
-.draggableAreaOnCard, .flippableAreaOnCard, .closeableAreaOnCard {
+.draggableAreaOnCard, .flippableAreaOnCard, .closeableAreaOnCard, .hideableAreaOnCard {
 	margin-bottom: 10px;
 	display: flex;
 	justify-content: center;
@@ -405,7 +406,7 @@ background-color: rgb(255, 255, 240);
   <!--<label class="newTaskLabel">New Task</label><input type='button' class='hideShowBarNewTask' value='+'/>-->
   </div>
   <div class='barNewTaskInsides'> 
-  <input type='text' class='barNewTaskInsidesTitle' name='Title' value='Write title for you task here'/>
+  <input type='text' class='barNewTaskInsidesTitle' name='Title' value='Write title for your task here'/>
   <!--<select class = 'select2' name='cards' multiple='multiple'></select>-->
   <input type='text' class='barNewTaskInsidesTask' name='Task' value='Write description of your task here'/>
   <input type='button' class='addNewTaskButton' value='ADD'/>
@@ -462,7 +463,7 @@ background-color: rgb(255, 255, 240);
 	var checkboxOutlineClassName = 'checkboxOutline';
 	var checkboxOutline = '<svg class=\'' + elementsLayingOverFunctionalElementsClassName + ' ' + checkboxOutlineClassName + '\' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/><path d="M0 0h24v24H0z" fill="none"/></svg>';
 	var checkboxFilledClassName = 'checkboxFilled';
-	var checkboxFilled = '<svg class=\'' + elementsLayingOverFunctionalElementsClassName + ' ' + checkboxFilledClassName + '\' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>';
+	var checkboxFilled = '<svg class=\'' + elementsLayingOverFunctionalElementsClassName + ' ' + checkboxFilledClassName + '\' fill="rgb(34, 139, 34)" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>';
 	var mainContainersClassName = 'mainContainer';
 	var keyForMainContainersOpacityFromSessionStorage = 'mainContainersOpacity';
 	var backgroundStyleFrontChooseDivClassName = 'backgroundStyleFrontChooseDiv';
@@ -488,6 +489,7 @@ background-color: rgb(255, 255, 240);
 	var flippableAreaOnCardClassName = 'flippableAreaOnCard';
 	var closeableAreaOnCardClassName = 'closeableAreaOnCard';
 	var checkableAreaOnCardClassName = 'checkableAreaOnCard';
+	var hideableAreaOnCardClassName = 'hideableAreaOnCard';
 	
 setInitialCardOrders();
 configureCardAreasWidth();
@@ -749,7 +751,7 @@ makeCardsCloseable(cards);
 		addSubtaskConfigurationAbility(newCardArea.childNodes[0]);
 		
 		var titleTextarea = newCardFront.getElementsByClassName(titleTextClassName)[0];
-		makeTextInputAutoclear(titleTextarea, 'Write title for you task here');
+		makeTextInputAutoclear(titleTextarea, 'Write title for your task here');
 		
 		var taskTextarea = newCardFront.getElementsByClassName(taskTextClassName)[0];
 		var title = newCardFront.getElementsByClassName(titleTextClassName)[0];
@@ -783,9 +785,42 @@ makeCardsCloseable(cards);
 	if (card.className.indexOf(cardsClassName) != -1) {
 		makeCardsDraggable(cardToArray);
 	}
+	if (card.className.indexOf(innerCardsClassName) != -1) {
+		makeCardsHideable(cardToArray);
+	}
 	makeCardsCloseable(cardToArray);
+	if (card.className.indexOf(innerCardsClassName) != -1) {
+		var closeableAreaOnCard = card.getElementsByClassName(closeableAreaOnCardClassName)[0];
+		closeableAreaOnCard.addEventListener('click', {handleEvent: closeSubtaskCardClickHandler, cardToDelete: card});
+	}
 	cards = document.getElementsByClassName(cardsClassName);
 	configureCardAreasWidth();
+}
+
+function closeSubtaskCardClickHandler(e) {
+	var cardToDeleteParentCard = this.cardToDelete.parentNode;
+	var allTaskCards = document.getElementsByClassName(cardsClassName);
+	for (var i = 0; i < allTaskCards.length; i++) {
+		if (allTaskCards[i].contains(this.cardToDelete)) {
+			cardToDeleteParentCard = allTaskCards[i];
+			break;
+		}
+	}
+	console.log(cardToDeleteParentCard);
+	var selectWithSubtasks = cardToDeleteParentCard.getElementsByClassName(selectSubtasksClassName)[0];
+	var divListingAllSubtasks = cardToDeleteParentCard.getElementsByClassName(showSubtasksDivClassName)[0];
+	var allInnerCards = cardToDeleteParentCard.getElementsByClassName(innerCardsClassName);
+	var indexOfCardToDelete = -1;
+	for (var i = 0; i < allInnerCards.length; i++) {
+		if (allInnerCards[i].contains(e.target)) {
+			indexOfCardToDelete = i;
+			break;
+		}
+	}
+	if (indexOfCardToDelete >= 0) {
+		var allSubtaskPanels = divListingAllSubtasks.getElementsByClassName(newSubtaskPanelClassName);
+		divListingAllSubtasks.removeChild(allSubtaskPanels[indexOfCardToDelete]);
+	}
 }
 	
 function writeButtonFunctionsOnButton(card) {
@@ -821,6 +856,20 @@ function writeButtonFunctionsOnButton(card) {
 	if (card.className.indexOf(innerCardsClassName) != -1) {
 		frontClose.addEventListener('click', clearSubtaskSelection);
 		backClose.addEventListener('click', clearSubtaskSelection);
+		var frontHide = front.getElementsByClassName(hideableAreaOnCardClassName)[0];
+		var backHide = back.getElementsByClassName(hideableAreaOnCardClassName)[0];
+		frontHide.title = 'Hide';
+		backHide.title = 'Hide';
+		frontHide.innerHTML = innerHTMLForCloseArea;
+		backHide.innerHTML = innerHTMLForCloseArea;
+		frontHide.style.marginTop = '5px';
+		backHide.style.marginTop = '5px';
+		/*var hideSVGFront = frontHide.getElementsByTagName('svg')[0];
+		hideSVGFront.style.fill = '#000000';
+		hideSVGFront.className = elementsLayingOverFunctionalElementsClassName;
+		var hideSVGFBack = backHide.getElementsByTagName('svg')[0];
+		hideSVGFBack.style.fill = '#000000';
+		hideSVGFBack.className = elementsLayingOverFunctionalElementsClassName;*/
 	}
 }
 
@@ -867,11 +916,11 @@ function addSubtaskConfigurationAbility(card) {
 	labelAddNewSubtask.style.marginLeft = '5px';
 		
 	var titleOfNewSubtask = document.createElement('textarea');
-	titleOfNewSubtask.value = 'Write title for you task here';
+	titleOfNewSubtask.value = 'Write title for your task here';
 	titleOfNewSubtask.className = newSubtaskInsidesTitleClassName + ' ' + titleTextClassName + ' ' + boxSizingItemsClassName;
 	titleOfNewSubtask.style.width = '100%';
 	titleOfNewSubtask.style.backgroundColor = 'rgb(255, 255, 240)';
-	makeTextInputAutoclear(titleOfNewSubtask, 'Write title for you task here');
+	makeTextInputAutoclear(titleOfNewSubtask, 'Write title for your task here');
 	back.appendChild(titleOfNewSubtask);
 	titleOfNewSubtask.style.display = 'none';
 		
@@ -915,7 +964,7 @@ function createNewSubtask(e) {
 	raiseInnerCardsBeforeAppearance(newCard);
 	
 	var titleTextarea = newCardFront.getElementsByClassName(titleTextClassName)[0];
-	makeTextInputAutoclear(titleTextarea, 'Write title for you task here');
+	makeTextInputAutoclear(titleTextarea, 'Write title for your task here');
 	titleTextarea.addEventListener('focusout', titleTextareaSubtaskClickHandler);
 		
 	var taskTextarea = newCardFront.getElementsByClassName(taskTextClassName)[0];
@@ -992,12 +1041,27 @@ function titleTextareaSubtaskClickHandler(e) {
 	if (currentCardIndex >= 0) {
 		var select2ForCurrentCard = parentCard.getElementsByClassName(selectSubtasksClassName)[0];
 		var showSubtasksDiv = parentCard.getElementsByClassName(showSubtasksDivClassName)[0];
+		var allSubtaskPanels = showSubtasksDiv.getElementsByClassName(newSubtaskPanelClassName);
 		var subtaskPanel = showSubtasksDiv.getElementsByClassName(newSubtaskPanelClassName)[currentCardIndex];
 		var subtaskPanelTitleText = subtaskPanel.getElementsByClassName(newSubtaskPanelTaskTitleClassName)[0];
 		subtaskPanelTitleText.innerHTML = newTitle;
-		select2ForCurrentCard.options[currentCardIndex].text = newTitle;
-		//$(select2ForCurrentCard).trigger('change');
+		var listOfNewOptions = [];
+		for (var i = 0; i < allSubtaskPanels.length; i++) {
+			listOfNewOptions.push(allSubtaskPanels[i].getElementsByClassName(newSubtaskPanelTaskTitleClassName)[0].innerHTML);
+		}
+		recreateSelectWithNewOptions(select2ForCurrentCard, listOfNewOptions);
 	}
+}
+
+function recreateSelectWithNewOptions(select2, listOfOptions) {
+	$(select2).empty().trigger('change');
+	var newOption = new Option();
+	$(select2).append(newOption); //for the placeholder to show when no option is chosen
+	for (var i = 0; i < listOfOptions.length; i++) {
+		var newOption = new Option(listOfOptions[i], i+1);
+		$(select2).append(newOption);
+	}
+	$(select2).trigger('change');
 }
 
 function taskDoneCheckboxClickHandler(e) {
