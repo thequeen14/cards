@@ -9,6 +9,7 @@ var draggableAreaOnCardClassName = 'draggableAreaOnCard';
 var flippableAreaOnCardClassName = 'flippableAreaOnCard';
 var closeableAreaOnCardClassName = 'closeableAreaOnCard';
 var checkableAreaOnCardClassName = 'checkableAreaOnCard';
+var hideableAreaOnCardClassName = 'hideableAreaOnCard';
 
 var idOfSpareAreaByDefault = 'spare';
 
@@ -183,34 +184,31 @@ function flipToDeeperLevel() {
 	var goBackButton = document.getElementById('testBackButton');
 	goBackButton.addEventListener('click', flipBackHandler);
 
-	var closeInnerCardFront = document.getElementsByClassName('closeInnerCard1')[0];
-	var closeInnerCardBack = document.getElementsByClassName('closeInnerCard2')[0];
-	closeInnerCardFront.addEventListener('click', closeInnerCard);
-	closeInnerCardBack.addEventListener('click', closeInnerCard);
+	var hideInnerCardFront = document.getElementsByClassName('hideInnerCard1')[0];
+	var hideInnerCardBack = document.getElementsByClassName('hideInnerCard2')[0];
+	hideInnerCardFront.addEventListener('click', hideInnerCard);
+	hideInnerCardBack.addEventListener('click', hideInnerCard);
 }
 
-function closeInnerCard(e) {
+function deleteInnerCard(e) {
 	e.stopPropagation();
 	var target = e.target;
-	
-	var dataOfCurrentChoice = e.params.args.data;
-	var cardCorrespondingChoiceNumber = parseInt(dataOfCurrentChoice.id);
-	var card = e.target.parentNode.parentNode.childNodes[cardCorrespondingChoiceNumber];
-	
-	/*var oneSideToClose = target.parentNode;
-	var anotherSideToClose = oneSideToClose.nextSibling;
-	if (e.target.className.indexOf('closeInnerCard2') != -1) {
-		anotherSideToClose = oneSideToClose.previousSibling;
-	}*/
-	
-	if (card.className.indexOf(innerCardsClassName) != -1) {
-		raiseInnerCardsBeforeAppearance(card);
-		card.style.display = 'none';
+	var cardToClose = target.parentNode.parentNode;
+	var parentOfCardToClose = cardToClose.parentNode;
+	parentOfCardToClose.removeChild(cardToClose);
+}
+
+function hideInnerCard(e) {
+	e.stopPropagation();
+	var target = e.target;
+	var cardToClose = target.parentNode.parentNode;
+	var indexOfCardToClose = -1;
+	for (var i = 0; i < cards.length; i++) {
+		if (cards[i] == cardToClose) {
+			indexOfCardToClose = i;
+		}
 	}
-	
-	//raiseInnerCardsBeforeAppearance(oneSideToClose.parentNode);
-	//oneSideToClose.style.visibility = 'hidden';
-	//anotherSideToClose.style.visibility = 'hidden';
+	raiseInnerCardsBeforeAppearance(cardToClose);
 }
 
 function raiseCardsBeforeAppearance(cards) {
@@ -244,13 +242,17 @@ function createNewInnerCard(parentCard) {
 function boundInnerCardAppearanceToElement(card) {
 	raiseInnerCardsBeforeAppearance(card);
 	var diveDeeperButton = document.getElementById('testMoreButton');
-	diveDeeperButton.addEventListener('click', showInnerCard);
+	diveDeeperButton.addEventListener('click', showInnerCardHandler);
 }
 
-function showInnerCard(e) {
+function showInnerCardHandler(e) {
 	var dataOfCurrentChoice = e.params.data;
 	var cardCorrespondingChoiceNumber = parseInt(dataOfCurrentChoice.id);
 	var card = e.target.parentNode.parentNode.childNodes[cardCorrespondingChoiceNumber + 1];
+	showInnerCard(card);
+}
+
+function showInnerCard(card) {
 	card.style.display = 'flex';
 	var oneSide = card.getElementsByClassName('front')[0];
 	var anotherSide = card.getElementsByClassName('back')[0];
@@ -280,87 +282,6 @@ function flipBackHandler(e) {
 	anotherSide.style.visibility = 'visible';
 }
 
-function createContentAreaOnCards(cardSide) {
-	var contentAreaOnCard = document.createElement('div');
-	contentAreaOnCard.className = 'contentAreaOnCard';
-	contentAreaOnCard.style.height = (Number(cardSide.style.height) - 20) + 'px';
-	cardSide.appendChild(contentAreaOnCard);
-	return contentAreaOnCard;
-}
-
-function addTestChartToAllCards() {
-	for (var i = 0; i < cards.length; i++) {
-	var cardFront = cards[i].getElementsByClassName(cardFrontClassName)[0];
-	//var chartArea = createContentAreaOnCards(cardFront);
-	
-	Highcharts.chart(cardFront, {
-
-    title: {
-        text: 'Solar Employment Growth by Sector, 2010-2016'
-    },
-
-    subtitle: {
-        text: 'Source: thesolarfoundation.com'
-    },
-
-    yAxis: {
-        title: {
-            text: 'Number of Employees'
-        }
-    },
-    legend: {
-        layout: 'vertical',
-        align: 'right',
-        verticalAlign: 'middle'
-    },
-
-    plotOptions: {
-        series: {
-            label: {
-                connectorAllowed: false
-            },
-            pointStart: 2010
-        }
-    },
-
-    series: [{
-        name: 'Installation',
-        data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
-    }, {
-        name: 'Manufacturing',
-        data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
-    }, {
-        name: 'Sales & Distribution',
-        data: [11744, 17722, 16005, 19771, 20185, 24377, 32147, 39387]
-    }, {
-        name: 'Project Development',
-        data: [null, null, 7988, 12169, 15112, 22452, 34400, 34227]
-    }, {
-        name: 'Other',
-        data: [12908, 5948, 8105, 11248, 8989, 11816, 18274, 18111]
-    }],
-
-    responsive: {
-        rules: [{
-            condition: {
-                maxWidth: 500
-            },
-            chartOptions: {
-                legend: {
-                    layout: 'horizontal',
-                    align: 'center',
-                    verticalAlign: 'bottom'
-                }
-            }
-        }]
-    }
-});
-}
-
-var chart = document.getElementsByClassName('highcharts-container')[0];
-chart.style.display = 'table-cell';
-}
-
 function makeAllCardsHidden() {
 	for (var i = 0; i < cardAreas.length; i++) {
 		cardAreas[i].style.display = 'none';
@@ -372,7 +293,7 @@ function makeCardsAppearWhenSelected(cardSelector, cardsTypeClassName) {
 		$(cardSelector).on('select2:select', changeCardAppearanceOnSelection);
 	}
 	if (cardsTypeClassName.indexOf(innerCardsClassName) != -1) {
-		$(cardSelector).on('select2:select', showInnerCard);
+		$(cardSelector).on('select2:select', showInnerCardHandler);
 	}
 }
 
@@ -381,7 +302,7 @@ function makeCardsDisappearWhenUnselected(cardSelector, cardsTypeClassName) {
 		$(cardSelector).on('select2:unselecting', changeCardAppearanceOnSelection);
 	}
 	if (cardsTypeClassName.indexOf(innerCardsClassName) != -1) {
-		$(cardSelector).on('select2:unselecting', closeInnerCard);
+		$(cardSelector).on('select2:unselecting', hideInnerCard);
 	}
 }
 
@@ -485,6 +406,40 @@ function assignCheckableArea(card) {
 	backCard.insertBefore(backCheckableArea, backCard.firstChild);
 }
 
+function makeCardsHideable(cardsToMakeHideable) {
+	for (var i = 0; i < cardsToMakeHideable.length; i++) {
+	assignHideableArea(cardsToMakeHideable[i]);
+}
+}
+
+function createHideableArea() {
+	var hideableArea = document.createElement('div');
+		hideableArea.className = hideableAreaOnCardClassName;
+		hideableArea.style.width = '20%';
+		hideableArea.style.height = '20px';
+		hideableArea.style.float = 'right';
+		hideableArea.addEventListener('click', clickOnHideAreaHandler);
+	return hideableArea;
+}
+
+function clickOnHideAreaHandler(e) {
+	var parentCard = e.target.parentNode.parentNode;
+	if (parentCard.className.indexOf(innerCardsClassName) != -1) {
+		hideInnerCard(e);
+	}
+}
+
+function assignHideableArea(card) {
+	var frontCard = card.getElementsByClassName(cardFrontClassName)[0];
+	var backCard = card.getElementsByClassName(cardBackClassName)[0];
+	
+	var frontHideableArea = createHideableArea();
+	var backHideableArea = createHideableArea();
+	
+	frontCard.insertBefore(frontHideableArea, frontCard.firstChild);
+	backCard.insertBefore(backHideableArea, backCard.firstChild);
+}
+
 function makeCardsCloseable(cardsToMakecloseable) {
 	for (var i = 0; i < cardsToMakecloseable.length; i++) {
 	assignCloseableArea(cardsToMakecloseable[i]);
@@ -520,7 +475,12 @@ function clickOnCloseAreaHandler(e) {
 	
 	var cardAreaOfCardToClose = target.parentNode.parentNode.parentNode;
 	var cardToClose = target.parentNode.parentNode;
-	var indexOfCardToClose = -1;
+	
+	if (cardToClose.className.indexOf(innerCardsClassName) != -1) {
+		deleteInnerCard(e);
+	}
+	else {
+		var indexOfCardToClose = -1;
 	for (var i = 0; i < cards.length; i++) {
 		if (cards[i] == cardToClose) {
 			indexOfCardToClose = i;
@@ -552,6 +512,7 @@ function clickOnCloseAreaHandler(e) {
 		raiseInnerCardsBeforeAppearance(cardToClose);
 	}
 	configureCardAreasWidth();
+	}
 }
 
 function makeCardsFlippable(cardsToMakeFlippable){
