@@ -458,6 +458,7 @@ background-color: rgb(255, 255, 240);
 	var innerHTMLForSubtasksBackToMainTask = '<svg class=\'' + elementsLayingOverFunctionalElementsClassName + '\' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>'
 	var innerHTMLForShuffleCards = '<svg class=\'' + elementsLayingOverFunctionalElementsClassName + '\' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>'
 	var innerHTMLForCloseArea = '<svg class=\'' + elementsLayingOverFunctionalElementsClassName + '\' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'
+	var innerHTMLForHideArea = '<svg class=\'' + elementsLayingOverFunctionalElementsClassName + '\' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'
 	var innerHTMLForCheckArea = '<svg class=\'' + elementsLayingOverFunctionalElementsClassName + '\' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>'
 	var innerHTMLForAddArea = '<svg class=\'' + addNewSubtaskButtonSVGClassName + ' ' + elementsLayingOverFunctionalElementsClassName + '\' fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>'
 	var checkboxOutlineClassName = 'checkboxOutline';
@@ -791,14 +792,22 @@ makeCardsCloseable(cards);
 	makeCardsCloseable(cardToArray);
 	if (card.className.indexOf(innerCardsClassName) != -1) {
 		var closeableAreaOnCard = card.getElementsByClassName(closeableAreaOnCardClassName)[0];
-		closeableAreaOnCard.addEventListener('click', {handleEvent: closeSubtaskCardClickHandler, cardToDelete: card});
+		var allInnerCards = card.parentNode.getElementsByClassName(innerCardsClassName);
+		var indexOfCardToDelete = -1;
+		for (var i = 0; i < allInnerCards.length; i++) {
+			if (allInnerCards[i].contains(closeableAreaOnCard)) {
+				indexOfCardToDelete = i;
+				break;
+			}
+		}
+		closeableAreaOnCard.addEventListener('click', {handleEvent: closeSubtaskCardClickHandler, cardToDelete: card, cardToDeleteParentCard: card.parentNode, cardToDeleteIndex: indexOfCardToDelete});
 	}
 	cards = document.getElementsByClassName(cardsClassName);
 	configureCardAreasWidth();
 }
 
 function closeSubtaskCardClickHandler(e) {
-	var cardToDeleteParentCard = this.cardToDelete.parentNode;
+	var cardToDeleteParentCard = this.cardToDeleteParentCard;
 	var allTaskCards = document.getElementsByClassName(cardsClassName);
 	for (var i = 0; i < allTaskCards.length; i++) {
 		if (allTaskCards[i].contains(this.cardToDelete)) {
@@ -806,20 +815,17 @@ function closeSubtaskCardClickHandler(e) {
 			break;
 		}
 	}
-	console.log(cardToDeleteParentCard);
 	var selectWithSubtasks = cardToDeleteParentCard.getElementsByClassName(selectSubtasksClassName)[0];
 	var divListingAllSubtasks = cardToDeleteParentCard.getElementsByClassName(showSubtasksDivClassName)[0];
-	var allInnerCards = cardToDeleteParentCard.getElementsByClassName(innerCardsClassName);
-	var indexOfCardToDelete = -1;
-	for (var i = 0; i < allInnerCards.length; i++) {
-		if (allInnerCards[i].contains(e.target)) {
-			indexOfCardToDelete = i;
-			break;
-		}
-	}
-	if (indexOfCardToDelete >= 0) {
+	
+	if (this.cardToDeleteIndex >= 0) {
 		var allSubtaskPanels = divListingAllSubtasks.getElementsByClassName(newSubtaskPanelClassName);
-		divListingAllSubtasks.removeChild(allSubtaskPanels[indexOfCardToDelete]);
+		divListingAllSubtasks.removeChild(allSubtaskPanels[this.cardToDeleteIndex]);
+		var listOfNewOptions = [];
+		for (var i = 0; i < allSubtaskPanels.length; i++) {
+			listOfNewOptions.push(allSubtaskPanels[i].getElementsByClassName(newSubtaskPanelTaskTitleClassName)[0].innerHTML);
+		}
+		recreateSelectWithNewOptions(selectWithSubtasks, listOfNewOptions);
 	}
 }
 	
@@ -854,16 +860,16 @@ function writeButtonFunctionsOnButton(card) {
 		backDrag.title = 'Drag';
 	}
 	if (card.className.indexOf(innerCardsClassName) != -1) {
-		frontClose.addEventListener('click', clearSubtaskSelection);
-		backClose.addEventListener('click', clearSubtaskSelection);
 		var frontHide = front.getElementsByClassName(hideableAreaOnCardClassName)[0];
 		var backHide = back.getElementsByClassName(hideableAreaOnCardClassName)[0];
 		frontHide.title = 'Hide';
 		backHide.title = 'Hide';
-		frontHide.innerHTML = innerHTMLForCloseArea;
-		backHide.innerHTML = innerHTMLForCloseArea;
+		frontHide.innerHTML = innerHTMLForHideArea;
+		backHide.innerHTML = innerHTMLForHideArea;
 		frontHide.style.marginTop = '5px';
 		backHide.style.marginTop = '5px';
+		frontHide.addEventListener('click', clearSubtaskSelection);
+		backHide.addEventListener('click', clearSubtaskSelection);
 		/*var hideSVGFront = frontHide.getElementsByTagName('svg')[0];
 		hideSVGFront.style.fill = '#000000';
 		hideSVGFront.className = elementsLayingOverFunctionalElementsClassName;
