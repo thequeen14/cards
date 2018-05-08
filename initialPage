@@ -26,6 +26,7 @@ body {
 	background-attachment: fixed;
 	background-image:
 	radial-gradient(ellipse farthest-corner at right bottom, rgb(154, 205, 50) 0%, rgb(0,152, 133) 100%);
+	margin: 0 0 0 0;
 }
 
 text:focus {
@@ -792,7 +793,7 @@ makeCardsCloseable(cards);
 	makeCardsCloseable(cardToArray);
 	if (card.className.indexOf(innerCardsClassName) != -1) {
 		var closeableAreaOnCard = card.getElementsByClassName(closeableAreaOnCardClassName)[0];
-		var allInnerCards = card.parentNode.getElementsByClassName(innerCardsClassName);
+		/*var allInnerCards = card.parentNode.getElementsByClassName(innerCardsClassName);
 		var indexOfCardToDelete = -1;
 		for (var i = 0; i < allInnerCards.length; i++) {
 			if (allInnerCards[i].contains(closeableAreaOnCard)) {
@@ -800,13 +801,14 @@ makeCardsCloseable(cards);
 				break;
 			}
 		}
-		closeableAreaOnCard.addEventListener('click', {handleEvent: closeSubtaskCardClickHandler, cardToDelete: card, cardToDeleteParentCard: card.parentNode, cardToDeleteIndex: indexOfCardToDelete});
+		closeableAreaOnCard.addEventListener('mousedown', {handleEvent: closeSubtaskCardClickHandler, cardToDelete: card, cardToDeleteParentCard: card.parentNode, cardToDeleteIndex: indexOfCardToDelete});*/
+		closeableAreaOnCard.addEventListener('mousedown', {handleEvent: closeSubtaskCardClickHandler, cardToDelete: card});
 	}
 	cards = document.getElementsByClassName(cardsClassName);
 	configureCardAreasWidth();
 }
 
-function closeSubtaskCardClickHandler(e) {
+/*function closeSubtaskCardClickHandler(e) {
 	var cardToDeleteParentCard = this.cardToDeleteParentCard;
 	var allTaskCards = document.getElementsByClassName(cardsClassName);
 	for (var i = 0; i < allTaskCards.length; i++) {
@@ -821,6 +823,34 @@ function closeSubtaskCardClickHandler(e) {
 	if (this.cardToDeleteIndex >= 0) {
 		var allSubtaskPanels = divListingAllSubtasks.getElementsByClassName(newSubtaskPanelClassName);
 		divListingAllSubtasks.removeChild(allSubtaskPanels[this.cardToDeleteIndex]);
+		console.log(this.cardToDeleteIndex);
+		console.log(allSubtaskPanels[this.cardToDeleteIndex]);
+		var listOfNewOptions = [];
+		for (var i = 0; i < allSubtaskPanels.length; i++) {
+			listOfNewOptions.push(allSubtaskPanels[i].getElementsByClassName(newSubtaskPanelTaskTitleClassName)[0].innerHTML);
+		}
+		recreateSelectWithNewOptions(selectWithSubtasks, listOfNewOptions);
+	}
+}*/
+
+function closeSubtaskCardClickHandler(e) {
+	var allInnerCards = this.cardToDelete.parentNode.getElementsByClassName(innerCardsClassName);
+		var indexOfCardToDelete = -1;
+		for (var i = 0; i < allInnerCards.length; i++) {
+			if (allInnerCards[i] == this.cardToDelete) {
+				indexOfCardToDelete = i;
+				break;
+			}
+		}
+	var cardToDeleteParentCard = allInnerCards[indexOfCardToDelete].parentNode;
+	var selectWithSubtasks = cardToDeleteParentCard.getElementsByClassName(selectSubtasksClassName)[0];
+	var divListingAllSubtasks = cardToDeleteParentCard.getElementsByClassName(showSubtasksDivClassName)[0];
+	
+	if (indexOfCardToDelete >= 0) {
+		var allSubtaskPanels = divListingAllSubtasks.getElementsByClassName(newSubtaskPanelClassName);
+		divListingAllSubtasks.removeChild(allSubtaskPanels[indexOfCardToDelete]);
+		console.log(indexOfCardToDelete);
+		console.log(allSubtaskPanels[indexOfCardToDelete]);
 		var listOfNewOptions = [];
 		for (var i = 0; i < allSubtaskPanels.length; i++) {
 			listOfNewOptions.push(allSubtaskPanels[i].getElementsByClassName(newSubtaskPanelTaskTitleClassName)[0].innerHTML);
