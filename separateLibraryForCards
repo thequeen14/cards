@@ -220,8 +220,13 @@ function raiseCardsBeforeAppearance(cards) {
 function raiseInnerCardsBeforeAppearance(card) {
 	var oneSide = card.getElementsByClassName(cardFrontClassName)[0];
 	var anotherSide = card.getElementsByClassName(cardBackClassName)[0];
-	var lengthToRaiseTheCard = oneSide.getBoundingClientRect().top + oneSide.offsetHeight + window.pageYOffset;
-	//var widthToRaiseTheCard = oneSide.getBoundingClientRect().right + oneSide.offsetWidth + window.pageXOffset;;
+	var innerCardBottom = oneSide.getBoundingClientRect().bottom;
+	if (parseInt(innerCardBottom) <= 0) {
+		innerCardBottom = oneSide.getBoundingClientRect().top;
+	}
+	var lengthToRaiseTheCard = innerCardBottom + oneSide.offsetHeight + window.pageYOffset;
+	console.log(lengthToRaiseTheCard);
+	//var widthToRaiseTheCard = oneSide.getBoundingClientRect().right + oneSide.offsetWidth + window.pageXOffset;
 	
 	//oneSide.style.transform = 'translate(-200px,-' + lengthToRaiseTheCard + 'px)';
 	oneSide.style.transition = 'all 0.7s ease-in-out';
@@ -415,7 +420,7 @@ function makeCardsHideable(cardsToMakeHideable) {
 function createHideableArea() {
 	var hideableArea = document.createElement('div');
 		hideableArea.className = hideableAreaOnCardClassName;
-		hideableArea.style.width = '20%';
+		hideableArea.style.width = '50%';
 		hideableArea.style.height = '20px';
 		hideableArea.style.float = 'right';
 		hideableArea.addEventListener('click', clickOnHideAreaHandler);
@@ -451,7 +456,7 @@ function createCloseableArea() {
 	//var closeableArea = document.createElement('input');
 		//closeableArea.type = 'button';
 		closeableArea.className = closeableAreaOnCardClassName;
-		closeableArea.style.width = '20%';
+		closeableArea.style.width = '25%';
 		closeableArea.style.height = '20px';
 		closeableArea.style.float = 'right';
 		closeableArea.addEventListener('click', clickOnCloseAreaHandler);
@@ -524,7 +529,7 @@ function makeCardsFlippable(cardsToMakeFlippable){
 function createFlippableArea() {
 	var flippableArea = document.createElement('div');
 		flippableArea.className = flippableAreaOnCardClassName;
-		flippableArea.style.width = '40%';
+		flippableArea.style.width = '25%';
 		flippableArea.style.height = '20px';
 		//flippableArea.style.backgroundColor = 'lightgray';
 		flippableArea.style.float = 'right';
@@ -588,7 +593,7 @@ for (var i = 0; i < cardsToMakeDraggable.length; i++) {
 function createDraggableArea() {
 	var draggableArea = document.createElement('div');
 		draggableArea.className = draggableAreaOnCardClassName;
-		draggableArea.style.width = '40%';
+		draggableArea.style.width = '50%';
 		draggableArea.style.height = '20px';
 		//draggableArea.style.backgroundColor = 'darkgray';
 		draggableArea.style.float = 'right';
@@ -756,6 +761,10 @@ function moveOriginalElementToAnotherCardPlace(idOfAreaToMoveTo, originalElement
   }
   //cardAreasSortedByOrder[previousAreaPositionByOrder].style.order = areaToMoveToPositionByOrder;
   cardAreasSortedByOrder[previousAreaPositionInSortedCardAreas].style.order = areaToMoveToPositionByOrder;
+  var allInnerCards = originalElement.getElementsByClassName(innerCardsClassName);
+  for (var i = 0; i < allInnerCards.length; i++) {
+	raiseInnerCardsBeforeAppearance(allInnerCards[i]);
+  }
 }
 
 function moveOriginalElementToTheEndOfContainer(idOfAreaToMoveTo, originalElement) {
