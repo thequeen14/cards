@@ -283,6 +283,12 @@ background-color: rgb(255, 255, 240);
 	padding-left: 4px;
 }
 
+.newSubtaskPanel {
+	padding-left: 20px;
+	padding-top: 15px;
+	padding-right: 20px;
+}
+
 .addNewTaskButton {
 	font-weight: bold;
 	//color: darkslategray;
@@ -301,7 +307,9 @@ background-color: rgb(255, 255, 240);
 	resize: none;
 	font-family: serif;
 	font-size: 100%;
-	padding-left: 10px;
+	padding-left: 20px;
+	padding-top: 20px;
+	padding-right: 20px;
 }
 
 .titleText {
@@ -609,8 +617,6 @@ makeCardsCloseable(cards);
 			var newTaskContainer = document.getElementsByClassName(newTaskContainerClassName)[0];
 			var scrolled = window.pageYOffset || document.documentElement.scrollTop;
 			newTaskContainer.style.top = scrolled;
-			console.log(scrolled);
-			console.log(newTaskContainer.style.top);
 		});
 	}
 	
@@ -933,12 +939,15 @@ function addSubtaskConfigurationAbility(card) {
 	
 	var showSubtasksDiv = document.createElement('div');
 	showSubtasksDiv.className = showSubtasksDivClassName + ' ' + boxSizingItemsClassName;
-	showSubtasksDiv.innerHTML = '<div class='+ emptyShowSubtasksDivTextClassName +'>No tasks here yet!</div>';
-	showSubtasksDiv.style.padding = '0px 5px 0px 5px';
+	var emptyShowSubtasksDivText = document.createElement('div');
+	emptyShowSubtasksDivText.className = emptyShowSubtasksDivTextClassName;
+	emptyShowSubtasksDivText.innerHTML = 'No tasks here yet!';
+	emptyShowSubtasksDivText.style.padding = '20px 20px 20px 20px';
 	showSubtasksDiv.style.width = '100%';
 	showSubtasksDiv.style.height = '70%';
 	showSubtasksDiv.style.overflowY = 'auto';
 	back.appendChild(showSubtasksDiv);
+	showSubtasksDiv.appendChild(emptyShowSubtasksDivText);
 		
 	var labelAddNewSubtask = document.createElement('label');
 	labelAddNewSubtask.innerHTML = 'Add new subtask: ';
@@ -949,7 +958,10 @@ function addSubtaskConfigurationAbility(card) {
 	labelAddNewSubtask.style.right = '0';
 	labelAddNewSubtask.style.marginTop = '10px';
 	labelAddNewSubtask.style.marginBottom = '10px';
-	labelAddNewSubtask.style.marginLeft = '5px';
+	//labelAddNewSubtask.style.marginLeft = '5px';
+	labelAddNewSubtask.style.paddingLeft = '20px';
+	labelAddNewSubtask.style.paddingRight = '10px';
+	labelAddNewSubtask.style.paddingTop = '10px';
 		
 	var titleOfNewSubtask = document.createElement('textarea');
 	titleOfNewSubtask.value = 'Write title for your task here';
@@ -979,6 +991,9 @@ function addSubtaskConfigurationAbility(card) {
 	addButtonForNewSubtask.style.clear = 'both';
 	//addButtonForNewSubtask.style.height = '50px';
 	addButtonForNewSubtask.style.display = 'block';
+	addButtonForNewSubtask.style.marginLeft = '10px';
+	addButtonForNewSubtask.style.marginRight = '20px';
+	addButtonForNewSubtask.style.marginTop = '10px';
 	addButtonForNewSubtask.addEventListener('click', createNewSubtask);
 	back.appendChild(addButtonForNewSubtask);
 }
@@ -997,7 +1012,7 @@ function createNewSubtask(e) {
 	configureNewCard(newCard);
 	addSubtaskConfigurationAbility(newCard);
 	newCard.style.display = 'flex';
-	raiseInnerCardsBeforeAppearance(newCard);
+	raiseInnerCardsBeforeAppearance(newCard, false);
 	
 	var titleTextarea = newCardFront.getElementsByClassName(titleTextClassName)[0];
 	makeTextInputAutoclear(titleTextarea, 'Write title for your task here');
@@ -1069,11 +1084,12 @@ function titleTextareaSubtaskClickHandler(e) {
 	var currentCardIndex = -1;
 	for (var i = 0; i < otherInnerCards.length; i++) {
 		var innerCardFront = otherInnerCards[i].getElementsByClassName(cardFrontClassName)[0];
-		if (parseInt(window.getComputedStyle(innerCardFront).getPropertyValue('top')) == 0) {
+		if (parseInt(window.getComputedStyle(innerCardFront).getPropertyValue('right')) == 0) {
 			currentCardIndex = i;
 			break;
 		}
 	}
+	console.log(currentCardIndex);
 	if (currentCardIndex >= 0) {
 		var select2ForCurrentCard = parentCard.getElementsByClassName(selectSubtasksClassName)[0];
 		var showSubtasksDiv = parentCard.getElementsByClassName(showSubtasksDivClassName)[0];
