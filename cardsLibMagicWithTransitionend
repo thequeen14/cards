@@ -1,0 +1,926 @@
+var cardsContainerClassName = 'cardsContainer';
+var cardsClassName = 'material-card';
+var innerCardsClassName = 'inner-card';
+var cardAreasClassName = 'cardArea';
+var cardFrontClassName = 'front';
+var cardBackClassName = 'back';
+
+var draggableAreaOnCardClassName = 'draggableAreaOnCard';
+var flippableAreaOnCardClassName = 'flippableAreaOnCard';
+var closeableAreaOnCardClassName = 'closeableAreaOnCard';
+var checkableAreaOnCardClassName = 'checkableAreaOnCard';
+var hideableAreaOnCardClassName = 'hideableAreaOnCard';
+var idOfSpareAreaByDefault = 'spare';
+
+
+var keyForCardsOrdersFromLocalStorage = 'cardsOrders';
+var cardsDropdownClassName = 'select2';
+var cardSelectorClassName = '.select2';
+var cardFlippingObjectClassName = 'flipForMore';
+
+
+
+var cardsContainer = document.getElementsByClassName(cardsContainerClassName)[0];
+var cards = document.getElementsByClassName(cardsClassName);
+var innerCards = document.getElementsByClassName(innerCardsClassName);
+var cardAreas = document.getElementsByClassName(cardAreasClassName);
+var cardsDropdown = document.getElementsByClassName(cardsDropdownClassName)[0];
+
+var innerCardsStorage = [];
+var areasForInnerCards = [];
+var closedCards = [];
+var checkedCards = [];
+
+//initialFunction();
+
+function createNewMaterialCard(parentElement, typeOfCardClassName) {
+		var resultToAppendToParent;
+		var newCard = document.createElement('div');
+		if (typeOfCardClassName.indexOf(cardsClassName) != -1) {
+		var numberOfCardAreas = document.getElementsByClassName(cardAreasClassName).length + 1;
+		var newCardArea = document.createElement('div');
+		newCardArea.className = 'cardArea';
+		newCardArea.id = 'cardArea_' + numberOfCardAreas;
+		newCardArea.style.display = 'flex';
+		newCard.id = 'material-card_' + numberOfCardAreas;
+		newCard.className = cardsClassName;
+		newCard.style.display = 'flex';
+}	
+
+		var newCardFront = document.createElement('div');
+		newCardFront.className = 'front';
+
+		var newCardBack = document.createElement('div');
+		newCardBack.className = 'back';
+
+		newCard.appendChild(newCardFront);
+		newCard.appendChild(newCardBack);
+		if (parentElement.className.indexOf(cardsContainerClassName) != -1) {
+			newCardArea.appendChild(newCard);
+			resultToAppendToParent = newCardArea;
+		}
+
+		else {
+			newCard.className = innerCardsClassName;
+			newCard.style.display = 'none';
+			resultToAppendToParent = newCard;
+		}
+		return resultToAppendToParent;
+}
+
+
+
+function initialFunction() {
+setInitialCardOrders();
+configureCardAreasWidth();
+window.addEventListener('resize', configureCardAreasWidth);
+window.addEventListener('DOMContentLoaded', onLoadHandler);
+$(document).ready(initializeSelectDropdownForCards);
+initializeOptionsForCardsDropdown();
+//addTestChartToAllCards();
+makeCardsCheckable(cards);
+makeCardsDraggable(cards);
+makeCardsFlippable(cards);
+makeCardsFlippable(innerCards);
+makeCardsCloseable(cards);
+makeCardsCloseable(innerCards);
+makeAllCardsHidden();
+//raiseCardsBeforeAppearance(innerCards);
+makeCardsAppearWhenSelected(cardsDropdown);
+makeCardsDisappearWhenUnselected(cardsDropdown);
+}
+
+
+
+function handleNewCardAppearance(e) {
+	var insertedCardArea = e.target;
+	if (insertedCardArea.className.indexOf(cardAreasClassName) != -1) {
+		configureNewCard(insertedCardArea.childNodes[0]);
+	}
+}
+
+
+
+function setNewCardOrder(card) {
+	var maxCardOrder = 0;
+	if (document.getElementsByClassName(cardAreasClassName).length > 1) {
+		maxCardOrder = cardAreas.length;
+		//maxCardOrder = document.getElementsByClassName(cardAreasClassName)[cardAreas.length - 2].style.order;
+	}
+	card.parentNode.style.order = Number(maxCardOrder) + 1;
+}
+
+
+
+function createFlipToDeeperLevelButton() {
+	for (var i = 0; i < cards.length; i++) {
+	var flipToDeeperLevelButton = document.createElement('input');
+	flipToDeeperLevelButton.type = 'button';
+	flipToDeeperLevelButton.value = 'More---';
+	flipToDeeperLevelButton.style.height = '20px';
+	cards[i].childNodes[0].appendChild(flipToDeeperLevelButton);
+}
+}
+
+
+
+function makeObjectFlipTheCardOnClick(object) {
+	if (object.className.indexOf(cardFlippingObjectClassName) != -1) {
+		object.addEventListener('click', showMoreInfoAboutObject);
+	}
+}
+
+
+
+function showMoreInfoAboutObject() {
+	var diveDeeperButton = document.getElementByClassName('testMoreButton');
+	$(diveDeeperButton).click();
+}
+
+
+
+function flipToDeeperLevel() {
+	raiseInnerCardsBeforeAppearance();
+	var diveDeeperButton = document.getElementById('testMoreButton');
+	diveDeeperButton.addEventListener('click', flipDeeperHandler);
+	var diveEvenDeeper = document.getElementById('testEvenMoreButton');
+	diveEvenDeeper.addEventListener('click', flipEvenDeeperHandler);
+	var goBackButton = document.getElementById('testBackButton');
+	goBackButton.addEventListener('click', flipBackHandler);
+
+	var hideInnerCardFront = document.getElementsByClassName('hideInnerCard1')[0];
+	var hideInnerCardBack = document.getElementsByClassName('hideInnerCard2')[0];
+	hideInnerCardFront.addEventListener('click', hideInnerCard);
+	hideInnerCardBack.addEventListener('click', hideInnerCard);
+}
+
+
+
+function deleteInnerCard(e) {
+	e.stopPropagation();
+	var target = e.target;
+	var cardToClose = target.parentNode.parentNode;
+	var parentOfCardToClose = cardToClose.parentNode;
+	parentOfCardToClose.removeChild(cardToClose);
+}
+
+
+
+function hideInnerCard(e) {
+	e.stopPropagation();
+	var target = e.target;
+	var cardToClose = target.parentNode.parentNode;
+	var indexOfCardToClose = -1;
+	for (var i = 0; i < cards.length; i++) {
+		if (cards[i] == cardToClose) {
+			indexOfCardToClose = i;
+		}
+	}
+	raiseInnerCardsBeforeAppearance(cardToClose, true);
+}
+
+
+
+function raiseCardsBeforeAppearance(cards, visibleWhileHiding) {
+	for (var i = 0; i < cards.length; i++) {
+		raiseInnerCardsBeforeAppearance(cards[i], visibleWhileHiding);
+	}
+}
+
+
+
+function raiseInnerCardsBeforeAppearance(card, visibleWhileHiding) {
+	var oneSide = card.getElementsByClassName(cardFrontClassName)[0];
+	var anotherSide = card.getElementsByClassName(cardBackClassName)[0];
+	var innerCardRight = oneSide.getBoundingClientRect().right;
+	var lengthToMoveTheCard = window.screen.width - innerCardRight + oneSide.offsetWidth;
+	if (!visibleWhileHiding) {
+		oneSide.style.visibility = 'hidden';
+		anotherSide.style.visibility = 'hidden';
+	}
+	oneSide.style.transition = 'right 0.7s ease-in-out';
+	anotherSide.style.transition = 'right 0.7s ease-in-out';
+	card.style.transition = 'display 0.7s ease-in-out';
+	card.style.transition = 'height 0.7s ease-in-out';
+	card.style.transition = 'width 0.7s ease-in-out';
+	card.style.transition = 'opacity 0.7s ease-in-out';
+	anotherSide.style.right = '-' + lengthToMoveTheCard + 'px';
+	oneSide.style.right = '-' + lengthToMoveTheCard + 'px';
+	card.style.display = 'block';
+	card.style.height = '0';
+	card.style.width = '0';
+	card.style.opacity = '0';
+}
+
+
+
+function createNewInnerCard(parentCard) {
+	var newInnerCard = document.createElement('div');
+}
+
+
+function boundInnerCardAppearanceToElement(card) {
+	raiseInnerCardsBeforeAppearance(card);
+	var diveDeeperButton = document.getElementById('testMoreButton');
+	diveDeeperButton.addEventListener('click', showInnerCardHandler);
+}
+
+function showInnerCardHandler(e) {
+	var dataOfCurrentChoice = e.params.data;
+	var cardCorrespondingChoiceNumber = parseInt(dataOfCurrentChoice.id);
+	var card = e.target.parentNode.parentNode.childNodes[cardCorrespondingChoiceNumber + 1];
+	showInnerCard(card);
+}
+
+
+
+function showInnerCard(card) {
+	card.style.display = 'flex';
+	var oneSide = card.getElementsByClassName('front')[0];
+	var anotherSide = card.getElementsByClassName('back')[0];
+	card.style.transition = 'opacity 0.7s ease-in-out';
+	oneSide.style.transition = 'right 0.7s ease-in-out';
+	anotherSide.style.transition = 'right 0.7s ease-in-out';
+	card.style.transition = 'height 0.7s ease-in-out';
+	card.style.transition = 'width 0.7s ease-in-out';
+	card.style.transition = 'opacity 0.7s ease-in-out';
+	oneSide.style.right = '0px';
+	anotherSide.style.right = '0px';
+	oneSide.style.visibility = 'visible';
+	anotherSide.style.visibility = 'visible';
+	card.style.height = window.getComputedStyle(card.parentNode).height;
+	card.style.width = window.getComputedStyle(card.parentNode).width;
+	card.style.opacity = '1';
+}
+
+
+
+function flipEvenDeeperHandler(e) {
+	var oneSide = document.getElementsByClassName('front1')[0];
+	var anotherSide = document.getElementsByClassName('back1')[0];
+	flipCard(oneSide, anotherSide);
+	oneSide.style.visibility = 'visible';
+	anotherSide.style.visibility = 'visible';
+}
+
+function flipBackHandler(e) {
+	var oneSide = document.getElementsByClassName('back1')[0];
+	var anotherSide = document.getElementsByClassName('front1')[0];
+	flipCard(oneSide, anotherSide);
+	oneSide.style.visibility = 'visible';
+	anotherSide.style.visibility = 'visible';
+}
+
+
+
+function makeAllCardsHidden() {
+	for (var i = 0; i < cardAreas.length; i++) {
+		cardAreas[i].style.display = 'none';
+	}
+}
+
+
+
+function makeCardsAppearWhenSelected(cardSelector, cardsTypeClassName) {
+	if (cardsTypeClassName.indexOf(cardsClassName) != -1) {
+		$(cardSelector).on('select2:select', changeCardAppearanceOnSelection);
+	}
+	if (cardsTypeClassName.indexOf(innerCardsClassName) != -1) {
+		$(cardSelector).on('select2:select', showInnerCardHandler);
+	}
+}
+
+
+
+function makeCardsDisappearWhenUnselected(cardSelector, cardsTypeClassName) {
+	if (cardsTypeClassName.indexOf(cardsClassName) != -1) {
+		$(cardSelector).on('select2:unselecting', changeCardAppearanceOnSelection);
+	}
+	if (cardsTypeClassName.indexOf(innerCardsClassName) != -1) {
+		$(cardSelector).on('select2:unselecting', hideInnerCard);
+	}
+}
+
+
+
+function changeCardAppearanceOnSelection(e) {
+	if (e.target.className.indexOf(cardSelectorClassName.substring(1)) != -1) {
+		var stateOne = 'none';
+		var stateTwo = 'flex';
+		var dataOfCurrentChoice;
+		if (e.type.indexOf('select') != -1) {
+			dataOfCurrentChoice = e.params.data;
+		}
+		if (e.type.indexOf('unselecting') != -1) {
+			dataOfCurrentChoice = e.params.args.data;
+			stateOne = 'flex';
+			stateTwo = 'none';
+		}
+		var cardCorrespondingChoiceId = -1;
+		for (var i = 0; i < cardAreas.length; i++) {
+			if (cardAreas[i].id == 'cardArea_' + (parseInt(dataOfCurrentChoice.id) + 1)) {
+				cardCorrespondingChoiceId = i;
+				break;
+			}
+		}
+		var cardCorrespondingToCurrentChoice = cardAreas[cardCorrespondingChoiceId];
+		if (cardCorrespondingToCurrentChoice.style.display == stateOne) {
+					cardCorrespondingToCurrentChoice.style.display = stateTwo;
+		}
+		configureCardAreasWidth();
+	}
+
+}
+
+
+
+function initializeSelectDropdownForCards() {
+	$(cardSelectorClassName).select2({
+		placeholder: 'Select a card'
+	});
+}
+
+function initializeOptionsForCardsDropdown() {
+	for (var i = 0; i < cards.length; i++) {
+		var newOption = new Option(i + 1, i);
+		$(cardSelectorClassName).append(newOption);
+	}
+}
+
+
+
+function initializeCheckedCardsArray() {
+	for (var i = 0; i < cards.length; i++) {
+		checkedCards.push(0);
+	}
+}
+
+
+
+function makeCardsCheckable(cardsToMakeCheckable) {
+	initializeCheckedCardsArray();
+	for (var i = 0; i < cardsToMakeCheckable.length; i++) {
+	assignCheckableArea(cardsToMakeCheckable[i]);
+}
+}
+
+function createCheckableArea() {
+	var checkableArea = document.createElement('input');
+		checkableArea.type = 'checkbox';
+		checkableArea.className = checkableAreaOnCardClassName;
+		checkableArea.style.width = '10%';
+		checkableArea.style.height = '20px';
+		checkableArea.style.float = 'right';
+		checkableArea.addEventListener('click', clickOnCheckAreaHandler);
+	return checkableArea;
+}
+
+
+
+function clickOnCheckAreaHandler(e) {
+	e.stopPropagation();
+	var target = e.target;
+	var checkedCardArea = target.parentNode.parentNode.parentNode;
+	var checkedCard = target.parentNode.parentNode;
+	var indexOfCardInCheckedCardsArray = -1;
+	for (var i = 0; i < cards.length; i++) {
+		if (cards[i].id == checkedCard.id) {
+			indexOfCardInCheckedCardsArray = i;
+			break;
+		}
+	}
+	if (checkedCards[indexOfCardInCheckedCardsArray] == 0) {
+		checkedCards[indexOfCardInCheckedCardsArray] = 1;
+	}
+	else {
+		checkedCards[indexOfCardInCheckedCardsArray] = 0;
+	}
+}
+
+
+
+function assignCheckableArea(card) {
+    var frontCard = card.getElementsByClassName(cardFrontClassName)[0];
+	var backCard = card.getElementsByClassName(cardBackClassName)[0];
+	var frontCheckableArea = createCheckableArea();
+	var backCheckableArea = createCheckableArea();
+	frontCard.insertBefore(frontCheckableArea, frontCard.firstChild);
+	backCard.insertBefore(backCheckableArea, backCard.firstChild);
+}
+
+
+
+function makeCardsHideable(cardsToMakeHideable) {
+	for (var i = 0; i < cardsToMakeHideable.length; i++) {
+	assignHideableArea(cardsToMakeHideable[i]);
+}
+}
+
+
+
+function createHideableArea() {
+	var hideableArea = document.createElement('div');
+		hideableArea.className = hideableAreaOnCardClassName;
+		hideableArea.style.width = '50%';
+		hideableArea.style.height = '20px';
+		hideableArea.style.float = 'right';
+		hideableArea.addEventListener('click', clickOnHideAreaHandler);
+	return hideableArea;
+}
+
+
+
+function clickOnHideAreaHandler(e) {
+	var parentCard = e.target.parentNode.parentNode;
+	if (parentCard.className.indexOf(innerCardsClassName) != -1) {
+		hideInnerCard(e);
+	}
+}
+
+
+
+function assignHideableArea(card) {
+	var frontCard = card.getElementsByClassName(cardFrontClassName)[0];
+	var backCard = card.getElementsByClassName(cardBackClassName)[0];
+	var frontHideableArea = createHideableArea();
+	var backHideableArea = createHideableArea();
+
+	frontCard.insertBefore(frontHideableArea, frontCard.firstChild);
+	backCard.insertBefore(backHideableArea, backCard.firstChild);
+	card.addEventListener('transitionend', {handleEvent: cardHideWithTransitionHandler, elementToHideClassName: innerCardsClassName});
+}
+
+
+
+function cardHideWithTransitionHandler(e) {
+	console.log('ololo');
+	if (e.target.className == this.elementToHideClassName && e.propertyName.indexOf('opacity') != -1 && e.target.style.opacity == 0) {
+		e.target.style.display = 'none';
+	}
+	if (e.target.className == this.elementToHideClassName && e.propertyName.indexOf('opacity') != -1 && e.target.style.opacity == 1) {
+		e.target.style.display = 'flex';
+	}
+}
+
+
+
+function makeCardsCloseable(cardsToMakecloseable) {
+	for (var i = 0; i < cardsToMakecloseable.length; i++) {
+	assignCloseableArea(cardsToMakecloseable[i]);
+}
+}
+
+
+
+function createCloseableArea() {
+	var closeableArea = document.createElement('div');
+	//var closeableArea = document.createElement('input');
+		//closeableArea.type = 'button';
+		closeableArea.className = closeableAreaOnCardClassName;
+		closeableArea.style.width = '25%';
+		closeableArea.style.height = '20px';
+		closeableArea.style.float = 'right';
+		closeableArea.addEventListener('click', clickOnCloseAreaHandler);
+	return closeableArea;
+}
+
+
+
+function assignCloseableArea(card) {
+	var frontCard = card.getElementsByClassName(cardFrontClassName)[0];
+	var backCard = card.getElementsByClassName(cardBackClassName)[0];
+	var frontCloseableArea = createCloseableArea();
+	var backCloseableArea = createCloseableArea();
+
+	frontCard.insertBefore(frontCloseableArea, frontCard.firstChild);
+	backCard.insertBefore(backCloseableArea, backCard.firstChild);
+}
+
+
+
+function clickOnCloseAreaHandler(e) {
+	e.stopPropagation();
+	var target = e.target;
+
+	var cardAreaOfCardToClose = target.parentNode.parentNode.parentNode;
+	var cardToClose = target.parentNode.parentNode;
+
+	if (cardToClose.className.indexOf(innerCardsClassName) != -1) {
+		deleteInnerCard(e);
+	}
+
+	else {
+		var indexOfCardToClose = -1;
+	for (var i = 0; i < cards.length; i++) {
+		if (cards[i] == cardToClose) {
+			indexOfCardToClose = i;
+		}
+	}
+	if (indexOfCardToClose != -1) {
+		//cardsDropdown.removeChild(optionNodesFromCardsDropdown[indexOfCardToClose]);
+	}
+	closedCards.push(cardToClose);
+	if (cardAreaOfCardToClose.className.indexOf(cardAreasClassName) != -1) {
+		cardAreaOfCardToClose.style.display = 'none';
+	}
+	else {
+		raiseInnerCardsBeforeAppearance(cardToClose, true);
+	}
+	configureCardAreasWidth();
+	}
+}
+
+
+
+function makeCardsFlippable(cardsToMakeFlippable){
+	for (var i = 0; i < cardsToMakeFlippable.length; i++) {
+	assignFlippableArea(cardsToMakeFlippable[i]);
+}
+}
+
+
+
+function createFlippableArea() {
+	var flippableArea = document.createElement('div');
+		flippableArea.className = flippableAreaOnCardClassName;
+		flippableArea.style.width = '25%';
+		flippableArea.style.height = '20px';
+		flippableArea.style.float = 'right';
+		flippableArea.addEventListener('click', clickOnFlipAreaHandler);
+	return flippableArea;
+}
+
+
+
+function assignFlippableArea(card) {
+	var frontCard = card.getElementsByClassName(cardFrontClassName)[0];
+	var backCard = card.getElementsByClassName(cardBackClassName)[0];
+
+	var frontFlippableArea = createFlippableArea();
+	var backFlippableArea = createFlippableArea();
+
+	frontCard.insertBefore(frontFlippableArea, frontCard.firstChild);
+	backCard.insertBefore(backFlippableArea, backCard.firstChild);
+}
+
+
+
+function clickOnFlipAreaHandler(e) {
+	e.stopPropagation();
+	var target = e.target;
+	var cardFront = '';
+	var cardBack = '';
+
+	if (target.parentNode.className.indexOf(cardFrontClassName) != -1) {
+		cardFront = target.parentNode;
+		cardBack = target.parentNode.nextElementSibling;
+		flipCard(cardFront, cardBack);
+	}
+	else if (target.parentNode.className.indexOf(cardBackClassName) != -1){
+		cardBack = target.parentNode;
+		cardFront = target.parentNode.previousElementSibling;
+		flipCard(cardBack, cardFront);
+	}
+}
+
+
+
+function flipCard(sideFlipFrom, sideFlipTo) {
+	sideFlipFrom.style.transition = 'transform 0.7s ease-in-out';
+	sideFlipTo.style.transition = 'transform 0.7s ease-in-out';
+	sideFlipFrom.style.transform = 'rotateY(180deg)';
+	sideFlipTo.style.transform = 'rotateY(360deg)';
+}
+
+
+
+function setInitialCardOrders() {
+	for (var i = 0; i < cardAreas.length; i++) {
+	cardAreas[i].style.order = i;
+}
+}
+
+function makeCardsDraggable(cardsToMakeDraggable) {
+for (var i = 0; i < cardsToMakeDraggable.length; i++) {
+	cardsToMakeDraggable[i].addEventListener('mousedown', mouseDownOnCardContainerHandler);
+	assignDraggableArea(cardsToMakeDraggable[i]);
+}
+}
+
+function createDraggableArea() {
+	var draggableArea = document.createElement('div');
+		draggableArea.className = draggableAreaOnCardClassName;
+		draggableArea.style.width = '50%';
+		draggableArea.style.height = '20px';
+		draggableArea.style.float = 'right';
+		draggableArea.addEventListener('mousedown', mouseDownOnCardContainerHandler);
+	return draggableArea;
+}
+
+
+
+function assignDraggableArea(card) {
+	var frontCard = card.getElementsByClassName(cardFrontClassName)[0];
+	var backCard = card.getElementsByClassName(cardBackClassName)[0];
+	var frontDraggableArea = createDraggableArea();
+	var backDraggableArea = createDraggableArea();
+
+	frontCard.insertBefore(frontDraggableArea, frontCard.firstChild);
+	backCard.insertBefore(backDraggableArea, backCard.firstChild);
+}
+
+
+
+function mouseDownOnCardContainerHandler(e) {
+	e.stopPropagation();
+	var target = e.target;
+
+  if (target.className.split(' ').indexOf(cardsClassName) != -1) {
+  	mousedownOnCardHandler(e);
+  }
+
+  else {
+	var newTarget = target;
+	if (target.className.split(' ').indexOf(draggableAreaOnCardClassName) != -1) {
+		for (var i = 0; i < cards.length; i++) {
+		if (cards[i].contains(target)) {
+			newTarget = cards[i];
+			break;
+		}
+	}
+	if (newTarget.className.split(' ').indexOf(cardsClassName) != -1) {
+		var redirectClickToMaterialCard = new Event('mousedown');
+		newTarget.dispatchEvent(redirectClickToMaterialCard);
+	}
+	}
+  }
+}
+
+
+
+function mousedownOnCardHandler(e) {
+	e.stopPropagation();
+	var card = e.target;
+	var cardCopy = createCopyOfElementToDrag(card);
+	cardCopy.addEventListener('mouseup', mouseUpOnCardAreaHandler);
+  moveAt(e);
+
+  document.onmousemove = function (e) {
+	document.body.appendChild(cardCopy);
+    moveAt(e);
+  }
+
+
+
+	function moveAt(e) {
+	configureCardAreasWidth();
+    cardCopy.style.left = e.pageX - cardCopy.offsetWidth / 2 + 'px';
+    cardCopy.style.top = e.pageY - cardCopy.offsetHeight / 2 + 'px';
+  }
+}
+
+
+
+function createCopyOfElementToDrag(elem) {
+	var copy = elem.cloneNode(false);
+	copy.style.position = 'absolute';
+  copy.style.border = '2px solid gray';
+  copy.style.zIndex = 1000;
+  copy.style.width = Number(elem.offsetWidth) + 'px';
+  copy.style.height = Number(elem.offsetHeight) + 'px';
+  copy.style.backgroundColor = 'unset';
+  return copy;
+}
+
+
+
+function mouseUpOnCardAreaHandler(e) {
+	var cardToMoveId = this.id;
+	document.onmousemove = null;
+    this.onmouseup = null;
+    document.body.removeChild(this);
+
+    var elementUnderCursor = document.elementFromPoint(e.pageX - window.pageXOffset, e.pageY - window.pageYOffset);
+    var numberOfAreaToMoveElementTo = findIdOfAreaToMoveOriginalElementTo(elementUnderCursor);
+    var cardToMove = document.getElementById(cardToMoveId);
+    applySpecificMethodOfMovingToSpecifiedArea(elementUnderCursor, numberOfAreaToMoveElementTo, cardToMove);
+  }
+
+
+
+function findIdOfAreaToMoveOriginalElementTo(elementUnderCursor) {
+	var idOfAreaToMoveTo = idOfSpareAreaByDefault;
+  if (elementUnderCursor != null) {
+  	if (elementUnderCursor.className.split(' ').indexOf(cardsClassName) != -1) {
+  		idOfAreaToMoveTo = cardAreasClassName + elementUnderCursor.id.substring(cardsClassName.length);
+  	}
+  	else if (elementUnderCursor.className.split(' ').indexOf(cardAreasClassName) != -1 || elementUnderCursor.className.split(' ').indexOf(cardsContainerClassName) != -1) {
+  		idOfAreaToMoveTo = elementUnderCursor.id;
+  	}
+	else {
+		for (var i = 0; i < cards.length; i++) {
+		if (cards[i].contains(elementUnderCursor)) {
+			idOfAreaToMoveTo = cardAreasClassName + cards[i].id.substring(cardsClassName.length);
+			break;
+		}
+		}
+	}
+  }
+  return idOfAreaToMoveTo;
+}
+
+
+
+function applySpecificMethodOfMovingToSpecifiedArea(elementUnderCursor, idOfAreaToMoveTo, originalElement) {
+	if (elementUnderCursor != null && originalElement != null) {
+  	if (idOfAreaToMoveTo.indexOf(cardsClassName) != -1 || idOfAreaToMoveTo.indexOf(cardAreasClassName) != -1) {
+  		moveOriginalElementToAnotherCardPlace(idOfAreaToMoveTo, originalElement);
+  	}
+    configureCardAreasWidth();
+    var newSetOfOrders = [];
+    for (var i = 0; i < cardAreas.length; i++) {
+    	newSetOfOrders.push(cardAreas[i].style.order);
+    }
+    saveCurrentOrdersToLocalStorage(newSetOfOrders);
+  }
+}
+
+
+
+function moveOriginalElementToAnotherCardPlace(idOfAreaToMoveTo, originalElement) {
+	var areaToMoveTo = document.getElementById(idOfAreaToMoveTo);
+  var idOfElementToReplaceByOriginal = areaToMoveTo.childNodes[0].id;
+  var elementToReplaceByOriginal = document.getElementById(idOfElementToReplaceByOriginal);
+  var idOfPreviousArea = originalElement.parentNode.id;
+  var previousArea = document.getElementById(idOfPreviousArea);
+
+  var previousAreaPositionByOrder = parseInt(previousArea.style.order);
+  var areaToMoveToPositionByOrder = parseInt(areaToMoveTo.style.order);
+  var cardAreasSortedByOrder = sortElementsOnPageByOrder();
+  var previousAreaPositionInSortedCardAreas = -1;
+
+  var startOfShift = -1;
+
+  for (var i = 0; i < cardAreasSortedByOrder.length; i++) {
+	if (cardAreasSortedByOrder[i] == previousArea) {
+		startOfShift = i + 1;
+		previousAreaPositionInSortedCardAreas = i;
+	}
+  }
+  var endOfShift = -1;
+
+  for (var i = 0; i < cardAreasSortedByOrder.length; i++) {
+	if (cardAreasSortedByOrder[i] == areaToMoveTo) {
+		endOfShift = i + 1;
+	}
+  }
+  var directionOfShift = -1;
+
+  if (previousAreaPositionByOrder > areaToMoveToPositionByOrder) {
+	var temp = startOfShift - 1;
+	startOfShift = endOfShift - 1;
+	endOfShift = temp;
+    directionOfShift = 1;
+  }
+
+  for (var i = startOfShift; i < endOfShift; i++) {
+  	var newOrder = parseInt(cardAreasSortedByOrder[i].style.order) + directionOfShift;
+  	cardAreasSortedByOrder[i].style.order = newOrder;
+  }
+  //cardAreasSortedByOrder[previousAreaPositionByOrder].style.order = areaToMoveToPositionByOrder;
+  cardAreasSortedByOrder[previousAreaPositionInSortedCardAreas].style.order = areaToMoveToPositionByOrder;
+  var allInnerCards = originalElement.getElementsByClassName(innerCardsClassName);
+  for (var i = 0; i < allInnerCards.length; i++) {
+	raiseInnerCardsBeforeAppearance(allInnerCards[i], false);
+  }
+}
+
+
+
+function moveOriginalElementToTheEndOfContainer(idOfAreaToMoveTo, originalElement) {
+	var areaToMoveTo = document.getElementById(idOfAreaToMoveTo);
+  var elementsToShiftInsideArea = document.getElementsByClassName(cardAreasClassName);
+  var idOfPreviousArea = originalElement.parentNode.id;
+  var previousArea = document.getElementById(idOfPreviousArea);
+  var maxElementOrder = Number(previousArea.style.order);
+
+  for (var i = 0; i < elementsToShiftInsideArea.length; i++) {
+  	var nextElementOrder = Number(elementsToShiftInsideArea[i].style.order);
+  	if (nextElementOrder > maxElementOrder) {
+    	maxElementOrder = nextElementOrder;
+    }
+  }
+  previousArea.style.order = maxElementOrder + 1;
+}
+
+
+
+function sortElementsOnPageByOrder() {
+	var arrayToSort = [];
+	var allCards = document.getElementsByClassName(cardAreasClassName);
+	var currentlyShowedCards = [];
+	for (var i = 0; i < allCards.length; i++) {
+		if (allCards[i].style.display.indexOf('flex') != -1) {
+			currentlyShowedCards.push(allCards[i]);
+		}
+	}
+		for (var i = 0; i < currentlyShowedCards.length; i++) {
+			arrayToSort.push(currentlyShowedCards[i]);
+		}
+  arrayToSort.sort(compareAsNumbers);
+  return arrayToSort;
+}
+
+
+
+function compareAsNumbers(a, b) {
+	if (Number(a.style.order) > Number(b.style.order)) return 1;
+  if (Number(a.style.order) < Number(b.style.order)) return -1;
+  if (Number(a.style.order) == Number(b.style.order)) return 0;
+}
+
+
+
+function configureCardAreasWidth() {
+	var sortedByFlexOrderArray = sortElementsOnPageByOrder();
+  for (var i = 0; i < sortedByFlexOrderArray.length; i++) {
+  	sortedByFlexOrderArray[i].style.width = 'auto';
+  }
+
+  if (sortedByFlexOrderArray.length > 1) {
+  	var firstCardBoundingRect = sortedByFlexOrderArray[0].getBoundingClientRect();
+    var nextToFirstCardBoundingRect = sortedByFlexOrderArray[1].getBoundingClientRect();
+
+    if (firstCardBoundingRect.top != nextToFirstCardBoundingRect.top) {
+    	var newWidthForFirst = parseInt(cardsContainer.offsetWidth);
+  				sortedByFlexOrderArray[0].style.width = newWidthForFirst + 'px';
+    }
+    else {
+    	sortedByFlexOrderArray[0].style.width = 'auto';
+    }
+
+    if (sortedByFlexOrderArray.length > 2) {
+    	for (var i = 2; i < sortedByFlexOrderArray.length; i++) {
+  			var boundingRectangleOfPreviousCard = sortedByFlexOrderArray[i - 1].getBoundingClientRect();
+    		var boundingRectangleOfCurrentCard = sortedByFlexOrderArray[i].getBoundingClientRect();
+    		var previousToPreviousBoundingRect = sortedByFlexOrderArray[i-2].getBoundingClientRect();
+
+  			if (boundingRectangleOfPreviousCard.top != boundingRectangleOfCurrentCard.top) {
+    			var newWidth = parseInt(cardsContainer.offsetWidth) - parseInt(previousToPreviousBoundingRect.right);
+  				sortedByFlexOrderArray[i - 1].style.width = newWidth + 'px';
+    		}
+        else {
+        	sortedByFlexOrderArray[i - 1].style.width = 'auto';
+        }
+  	}
+}
+
+	var lastCardBoundingRect = sortedByFlexOrderArray[sortedByFlexOrderArray.length - 1].getBoundingClientRect();
+    var previousToLastCardBoundingRect = sortedByFlexOrderArray[sortedByFlexOrderArray.length - 2].getBoundingClientRect();
+
+    if (lastCardBoundingRect.top != previousToLastCardBoundingRect.top) {
+    	var newWidthForLast = parseInt(cardsContainer.offsetWidth);
+  				sortedByFlexOrderArray[sortedByFlexOrderArray.length - 1].style.width = newWidthForLast + 'px';
+    }
+    else {
+    	var newWidthForLastAgain = parseInt(cardsContainer.offsetWidth) - parseInt(previousToLastCardBoundingRect.right);
+  				sortedByFlexOrderArray[sortedByFlexOrderArray.length - 1].style.width = newWidthForLastAgain + 'px';
+    }
+  }
+}
+
+
+
+function saveCurrentOrdersToLocalStorage(setOfOrders) {
+	sessionStorage.setItem(keyForCardsOrdersFromLocalStorage, setOfOrders);
+}
+
+
+
+function onLoadHandler() {
+	var loaded = sessionStorage.getItem('loaded');
+  if (loaded) {
+  	setSavedOrdersFromLocalStorage();
+  }
+  else {
+  	sessionStorage.setItem('loaded', true);
+  }
+}
+
+
+
+function setSavedOrdersFromLocalStorage() {
+	var retrieveSavedOrdersInStringFormat = sessionStorage.getItem(keyForCardsOrdersFromLocalStorage);
+	if (retrieveSavedOrdersInStringFormat != null && typeof(retrieveSavedOrdersInStringFormat) !== undefined) {
+		var retrieveSavedOrders = retrieveSavedOrdersInStringFormat.split(',');
+		var currentlyShowedCards = document.getElementsByClassName(cardAreasClassName);
+		for (var i = 0; i < cardAreas.length; i++) {
+			for (var j = 0; j < currentlyShowedCards.length; j++) {
+				if (cardAreas[i] == currentlyShowedCards[j]) {
+					cardAreas[i].style.order = retrieveSavedOrders[i];
+				}
+			}
+		}
+		configureCardAreasWidth();
+	}
+}
